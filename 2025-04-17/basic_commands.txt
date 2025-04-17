@@ -1,0 +1,11 @@
+ls       : To list files and directories
+cd       : To change directories
+cd ..    : To go back to previous directory/location
+pwd      : To see the present working directory's locaction
+mkdir    : To make a directory
+rmdir    : To remove an empty directory
+rm       : To remove directory or files
+nano/vim : To edit text files using terminal
+touch    : To make an empty an file 
+mv       : To move/rename directory or file
+cp       : To copy files or directories
