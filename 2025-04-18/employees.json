@@ -1,0 +1,41 @@
+[{
+	"_id": {
+		"$oid": "68023fe97a8f3d81a9d861e0"
+	},
+	"empId": 101,
+	"name": "Ravi",
+	"department": "IT",
+	"salary": 82500.0,
+	"isActive": true
+},
+{
+	"_id": {
+		"$oid": "68023fe97a8f3d81a9d861e1"
+	},
+	"empId": 102,
+	"name": "Abhi",
+	"department": "IT",
+	"salary": 55000.00000000001,
+	"isActive": true
+},
+{
+	"_id": {
+		"$oid": "68023fe97a8f3d81a9d861e3"
+	},
+	"empId": 104,
+	"name": "Levi",
+	"department": "Sales",
+	"salary": 75000,
+	"isActive": true
+},
+{
+	"_id": {
+		"$oid": "68023fe97a8f3d81a9d861e5"
+	},
+	"empId": 106,
+	"name": "Naruto",
+	"department": "Sales",
+	"salary": 60000,
+	"isActive": true
+}]
+
