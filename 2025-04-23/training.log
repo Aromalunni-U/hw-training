@@ -1,0 +1,9 @@
+Revised and coded:
+    - List comprehension
+    - exception handling
+    - string formatting
+    - constructor, destructor
+    - keyword arguments 
+few python topics also
+
+Task one is almost completed (parse_item() is pending)
