@@ -1,0 +1,2 @@
+Coded regular expreession, pymongo, requests.
+Scraped data from marksandspencer.com using Scrapy and exported it to JSON and CSV formats.
