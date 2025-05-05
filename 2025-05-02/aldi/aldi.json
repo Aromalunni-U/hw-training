@@ -48,22 +48,6 @@
         ]
     },
     {
-        "product_name": "Autumn Crisp Grapes",
-        "product_link": "https://www.aldi.us/product/autumncrisp-grapes-2-lb-0000000000003640",
-        "product_id": "0000000000003640",
-        "product_quantity": "2 lb",
-        "price": "6.59",
-        "currency": "$",
-        "origin": "USA and Imported",
-        "image": "https://dm.cms.aldi.cx/is/image/prod1amer/product/jpg/scaleWidth/500/c76bd2cb-9f84-44c2-aa21-187979a9c471/Autumn%20Crisp%20Grapes%202%20lb%20Bag",
-        "product_description": "no description",
-        "breadcrumb": [
-            "Home",
-            "Featured",
-            "Charcuterie"
-        ]
-    },
-    {
         "product_name": "Granny Smith Apples",
         "product_link": "https://www.aldi.us/product/granny-smith-apples-3-lb-0000000000003644",
         "product_id": "0000000000003644",
@@ -259,7 +243,7 @@
         "product_name": "Mini Avocados",
         "product_link": "https://www.aldi.us/product/fresh-mini-avocados-6ct-0000000000003843",
         "product_id": "0000000000003843",
-        "product_quantity": "6 count",
+        "product_quantity": "6 ct",
         "price": "3.25",
         "currency": "$",
         "origin": "N/A",
@@ -648,22 +632,6 @@
         "currency": "$",
         "origin": "Imported",
         "image": "https://dm.cms.aldi.cx/is/image/prod1amer/product/jpg/scaleWidth/500/814f26bd-a6fd-4af0-b207-a596bc3fb8c2/Personal%20Seedless%20Watermelon",
-        "product_description": "no description",
-        "breadcrumb": [
-            "Home",
-            "Fresh Produce",
-            "Fresh Fruit"
-        ]
-    },
-    {
-        "product_name": "Cantaloupe",
-        "product_link": "https://www.aldi.us/product/athena-cantaloupe-0000000000005768",
-        "product_id": "0000000000005768",
-        "product_quantity": "1 each",
-        "price": "2.85",
-        "currency": "$",
-        "origin": "USA and Imported",
-        "image": "https://dm.cms.aldi.cx/is/image/prod1amer/product/jpg/scaleWidth/500/3c9f391d-e1ef-4701-9fc2-40bf9985b1be/Cantaloupe",
         "product_description": "no description",
         "breadcrumb": [
             "Home",
