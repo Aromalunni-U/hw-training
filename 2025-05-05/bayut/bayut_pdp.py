@@ -1,5 +1,6 @@
 import csv
 import json
+import time
 import requests
 from tqdm import tqdm
 from parsel import Selector
@@ -15,7 +16,7 @@ def get_product(product_links, url):
             property_url = urljoin(url, link)
             response = requests.get(property_url)
 
-            if response.status_code == 200:
+            if response.status_code == 200:        
                 selector = Selector(response.text)
 
                 currency = selector.xpath("//span[@aria-label='Currency']/text()").get()
@@ -84,7 +85,7 @@ def get_product(product_links, url):
                     "trucheck_date": trucheck_date,
                     "breadcrumb": breadcrumb,
                     "image": image,
-                }
+                }         
             else:
                 print(response.status_code)
 

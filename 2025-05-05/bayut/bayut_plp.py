@@ -8,7 +8,7 @@ def get_product_links(url):
     product_links = []  
     page_count = 1
     
-    while url and page_count <= 10:
+    while url and page_count < 11:
         response = requests.get(url,headers=HEADERS)
         if response.status_code == 200:
             selector = Selector(response.text)
