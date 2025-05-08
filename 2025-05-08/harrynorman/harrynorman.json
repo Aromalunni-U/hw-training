@@ -1,0 +1,92 @@
+[
+    {
+        "agent_url": "https://www.harrynorman.com/bio/JoseFigueroa",
+        "agent_name": "Jose Figueroa",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/4174735/4174735_11092023073808.jpg",
+        "agent_phone": "Not Available",
+        "agent_website": "Not Available",
+        "communities": "Ansley Park, Brookhaven, Buckhead, North Buckhead, Sandy Springs, South Buckhead, Virginia Highland",
+        "market_areas": "Ansley Park, Brookhaven, Buckhead, North Buckhead, Sandy Springs"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/StacyEdwards",
+        "agent_name": "Stacy Edwards",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/6513380/6513380_06272024153013.jpg",
+        "agent_phone": "678-640-1521",
+        "agent_website": "https://StacyEdwards.harrynorman.com",
+        "communities": "Not Available",
+        "market_areas": "Not Available"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/SamanthaBostardi",
+        "agent_name": "Samantha Bostardi",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/4173885/4173885_11092023073808.jpg",
+        "agent_phone": "678-823-0584",
+        "agent_website": "https://SamanthaBostardi.harrynorman.com",
+        "communities": "Alpharetta, Canton, Milton, Roswell, Woodstock",
+        "market_areas": "Alpharetta, Canton, Johns Creek, Milton, Roswell"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/HeatherCollier",
+        "agent_name": "Heather Collier",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/4173968/4173968_11092023073808.jpg",
+        "agent_phone": "912-512-5790",
+        "agent_website": "https://HeatherCollier.harrynorman.com",
+        "communities": "Not Available",
+        "market_areas": "Not Available"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/AnthonyAcosta",
+        "agent_name": "Anthony Acosta",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/4173802/4173802_11202023133014.jpg",
+        "agent_phone": "404-797-9907",
+        "agent_website": "https://anthonyacosta.harrynorman.com",
+        "communities": "Buckhead, Downtown, Midtown, Decatur, Virginia Highland, Sandy Springs, Brookhaven, Dunwoody, Vinings, Smyrna, East Cobb, North Buckhead, South Buckhead, Woodstock",
+        "market_areas": "Buckhead, Midtown, Decatur, Brookhaven, Vinings"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/gadebusch",
+        "agent_name": "Jill & Kirk Gadebusch",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/6136662/6136662_02152023171547.jpg",
+        "agent_phone": "Not Available",
+        "agent_website": "Not Available",
+        "communities": "East Cobb, Roswell, Sandy Springs, Atlanta, Woodstock, Marietta, Vinings, Smyrna, Milton, Alpharetta, Kennesaw, Dunwoody, Decatur, Acworth, Suwanee, Peachtree City, Blue Ridge, Johns Creek, Cumming & Lake Lanier, West Cobb, Oakhurst, Duluth, Edgewood, East Lake, Cabbagetown, Little Five Points, Lake Claire/Candler Park, Sweet Auburn, Reynoldstown, Hiawassee, Blairsville, Big Canoe, Luxury Lake & Mountain, North Gwinnett & South Forsyth, Canton, Lawrenceville, Tucker, Snellville, Buford, Chamblee",
+        "market_areas": "Canton, East Cobb, Marietta, Roswell, Smyrna"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/DenekaStephens",
+        "agent_name": "Deneka Stephens",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/6506401/6506401_06172024153011.jpg",
+        "agent_phone": "Not Available",
+        "agent_website": "Not Available",
+        "communities": "Not Available",
+        "market_areas": "Not Available"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/DorisGrant",
+        "agent_name": "Doris Grant",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/4174743/4174743_11092023073808.jpg",
+        "agent_phone": "770-589-0692",
+        "agent_website": "Not Available",
+        "communities": "Acworth, Canton, Kennesaw, Marietta, Smyrna, West Cobb",
+        "market_areas": "Acworth, Canton, Kennesaw, Marietta, Smyrna"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/ShelbySellers",
+        "agent_name": "Shelby Sellers",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/4174550/4174550_11092023073808.jpg",
+        "agent_phone": "678-526-4341",
+        "agent_website": "https://ShelbySellers.harrynorman.com",
+        "communities": "Peachtree City",
+        "market_areas": "Peachtree City"
+    },
+    {
+        "agent_url": "https://www.harrynorman.com/bio/RenRuiz",
+        "agent_name": "Ren Ruiz",
+        "agent_image": "https://content.mediastg.net/dynamic/RealEstate/company/753/account/4174516/4174516_11092023073808.jpg",
+        "agent_phone": "678-245-2272",
+        "agent_website": "https://RenRuiz.harrynorman.com",
+        "communities": "Canton, East Cobb, Marietta, Roswell, Smyrna, Woodstock",
+        "market_areas": "Canton, East Cobb, Marietta, Roswell, Smyrna"
+    }
+]
