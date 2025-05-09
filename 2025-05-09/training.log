@@ -1,0 +1,6 @@
+URL: https://www.harrynorman.com/roster/Agents
+
+Developed a scraper to extract agent names, contact details etc from the website.
+Tested the scraper to ensure all data was accurately collected across all pages and handled dynamic content correctly.
+Stored the cleaned and structured data in mongodb (792 agents).
+

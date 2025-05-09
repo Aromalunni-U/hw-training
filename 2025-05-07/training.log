@@ -1,2 +1,6 @@
 Meeting was conducted 
-completed scraping (pdp & plp) bahrainfinder website
+
+URL : https://bahrainfinder.bh/
+Developed a scraper to extract url, currency, price  etc from the website.
+Tested the scraper to ensure all data was accurately collected across all pages.
+Stored the cleaned and structured data in JSON.

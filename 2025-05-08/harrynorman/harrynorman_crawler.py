@@ -1,25 +1,44 @@
-from parsel import Selector
-from selenium import webdriver
+import re
+import logging
+import cloudscraper
 from urllib.parse import urljoin
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from settings import HEADERS
 
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%H:%M"
+)
 
-def crawler(url):
-    driver.get(url)
-    WebDriverWait(driver, 5).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "site-roster-card-image-link"))
-    )
+scraper = cloudscraper.create_scraper()
+scraper.headers.update(HEADERS)
 
-    selector = Selector(text=driver.page_source)
+agent_links = []
 
-    agent_link_xpath = "//a[@class='site-roster-card-image-link']/@href"
-    agent_links = selector.xpath(agent_link_xpath).getall()
+def crawler(url_template):
+    page_number = 1
+    while True:
+        url = url_template.format(page_number=page_number)
+        logging.info(f"Scraping page {page_number} ...")
 
-    driver.quit()
-    return [urljoin(url,link) for link in agent_links]
+        try:
+            response = scraper.get(url)
+            if response.status_code == 200:
+
+                pattern = r'/bio/[^\\"]+'
+                matches = re.findall(pattern, response.text)
+
+                if matches:
+                    full_urls = [urljoin(url, match) for match in matches]
+                    agent_links.extend(full_urls)
+                else:
+                    break
+                page_number += 1 
+
+            else:
+                logging.warning(f"Status code {response.status_code}")
+        except Exception as e:
+            logging.error(f"Error occurred while scraping page {page_number}: {e}")
+
+    logging.info(f"Total agent URLS collected: {len(agent_links)}")
+    return agent_links

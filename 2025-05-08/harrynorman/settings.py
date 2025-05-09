@@ -1,6 +1,12 @@
 
 
 
-BASE_URL = "https://www.harrynorman.com/roster/Agents"
+BASE_URL = "https://www.harrynorman.com/CMS/CmsRoster/RosterSearchResults?layoutID=1149&pageSize=10&pageNumber={page_number}&sortBy=random"
 
-JSON_PATH = "2025-05-08/harrynorman/harrynorman.json"
+HEADERS = {
+    "referer": "https://www.harrynorman.com/roster/Agents"
+}
+
+MONGO_URI = "mongodb://localhost:27017/"  
+DB_NAME = "harrynorman"
+COLLECTION_NAME = "parser"
