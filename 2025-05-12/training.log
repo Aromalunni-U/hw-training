@@ -1,0 +1,5 @@
+url : https://www.evrealestate.com/en/shops-and-advisors/advisor-locator
+
+Coded some basic python modules
+Completed scraping PLP using Requests, Parsel, and API, and stored the results in MongoDB.
+Completed scraping PDP using Requests and Parsel and stored the results in MongoDB.
