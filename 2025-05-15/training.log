@@ -1,0 +1,2 @@
+url : https://eservices.ajmanded.ae/en/TradeLicense
+Completed scraping eservices_ajmanded website using playwright for plp and curl_cffi for pdp along with parsel
