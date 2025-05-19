@@ -1,7 +1,7 @@
 import logging
 from parsel import Selector
 from urllib.parse import urljoin
-from settings import *
+from settings import MONGO_URI, BASE_URL, DB_NAME, CRAWLER_COLLECTION
 from pymongo import MongoClient
 from curl_cffi import requests
 

@@ -6,11 +6,7 @@ logging.basicConfig(
     datefmt='%H:%M:%S'
 )
 
-BASE_URL = "https://www.dubizzle.com.bh/en/vehicles/cars-for-sale/"
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-}
+BASE_URL = "https://www.dubizzle.com.bh/en/properties/properties-for-sale/"
 
 
 MONGO_URI = "mongodb://localhost:27017/"  
@@ -19,4 +15,20 @@ PARSE_COLLECTION = "parser"
 CRAWLER_COLLECTION = "crawler"  
 
 
-file_name = "dubizzle.csv"
+file_name = "2025-05-16/dubizzle/dubizzle.csv"
+
+FILE_HEADERS = [
+    "url",
+    "currency",
+    "price",
+    "beadroom",
+    "bathroom",
+    "furnished",
+    "area",
+    "location",
+    "amenities",
+    "price_type",
+    "breadcrumb",
+    "description",
+    "images",
+]
