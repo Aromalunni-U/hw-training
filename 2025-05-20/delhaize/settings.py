@@ -18,6 +18,7 @@ DB_NAME = "delhaize"
 PARSE_COLLECTION = "parser"
 CRAWLER_COLLECTION = "crawler"  
 
+file_name = "2025-05-20/delhaize/delhaize.csv"
 
 FILE_HEADERS = [
     "product_url",
@@ -26,6 +27,8 @@ FILE_HEADERS = [
     "currency",
     "price",
     "price_per_unit",
+    "ingredients",
+    "nutri_score_letter",
     "description",
     "imges_url" 
 ]
