@@ -1,7 +1,7 @@
 import requests
 import logging
 from pymongo import MongoClient
-from settings import MONGO_URI, CRAWLER_COLLECTION, DB_NAME, PARSE_COLLECTION, HEADERS, BASE_API_URL
+from settings import MONGO_URI, CRAWLER_COLLECTION, DB_NAME, PARSE_COLLECTION, BASE_API_URL
 
 
 class Parser:
@@ -34,9 +34,15 @@ class Parser:
 
         name = product.get("name","")
         product_code =  product.get("code","")
-        currency = price_details["currencySymbol"]
+        currency = price_details.get("currencySymbol","")
         price = price_details.get("unitPrice","")
-        price_per_unit =  price_details.get("supplementaryPriceLabel1")
+        price_per_unit =  price_details.get("supplementaryPriceLabel1","")
+
+        ingredients = ""
+        if product.get("wsNutriFactData"):
+            ingredients = product["wsNutriFactData"].get("ingredients", "")
+
+        nutri_score_letter = product.get("nutriScoreLetter","")
         description = product.get("description","")
 
         images_url = [
@@ -52,6 +58,8 @@ class Parser:
             "currency":currency,
             "price":price,
             "price_per_unit":price_per_unit,
+            "ingredients":ingredients,
+            "nutri_score_letter":nutri_score_letter,
             "description":description,
             "imges_url":images_url
         }
