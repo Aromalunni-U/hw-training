@@ -1,6 +1,6 @@
 import requests
 import logging
-from settings import HEADERS_CAT_1, BASE_URL, CRAWLER_COLLECTION, MONGO_URI, DB_NAME
+from settings import HEADERS_CAT_2, BASE_URL, CRAWLER_COLLECTION, MONGO_URI, DB_NAME
 from pymongo import MongoClient
 
 
@@ -21,13 +21,13 @@ class Crawler:
                 "viewName": "MainFlow.ProductListPage",
                 "screenData": {
                     "variables": {
-                        "LocalCategoryID": 1051,
+                        "CategorySlug": "melk-karnemelk",
                         "PageNumber": page_no
                     }
                 }
             }
 
-            response = requests.post(BASE_URL, json=payload, headers=HEADERS_CAT_1)
+            response = requests.post(BASE_URL, json=payload, headers=HEADERS_CAT_2)
 
             if response.status_code == 200:
 
@@ -42,7 +42,7 @@ class Crawler:
                             "url" : "https://www.plus.nl/product/" + slug
                             }
                             logging.info(full_url)
-                            self.collection.insert_one(full_url)
+                            # self.collection.insert_one(full_url)
                 else:
                     logging.info("Completed successfully")
                     break
