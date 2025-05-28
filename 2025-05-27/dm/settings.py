@@ -49,7 +49,7 @@ FILE_HEADERS = [
     "warning",
     "company_address",
     "nutritional_information",
-    "manufacturer_address"
+    "manufacturer_address",
     "promotion_valid_from",
     "promotion_valid_upto",
     "promotion_description",
