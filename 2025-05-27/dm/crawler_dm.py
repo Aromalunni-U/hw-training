@@ -30,7 +30,6 @@ class Crawler:
             }
 
             HEADERS["user-agent"] = random.choice(USER_AGENTS)
-
             try:
                 response = requests.get(BASE_URL, headers=HEADERS, params=params)
                 if response.status_code == 200:

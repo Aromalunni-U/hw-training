@@ -30,3 +30,24 @@ PARSE_COLLECTION = "parser"
 CRAWLER_COLLECTION = "crawler"  
 
 file_name = "2025-05-27/dm/dm.csv"
+
+FILE_HEADERS = [
+    "pdp_url",
+    "product_name",
+    "product_code",
+    "product_price", 
+    "currency",
+    "brand",
+    "images",
+    "breadcrumb",
+    "rating",
+    "review",
+    "features",
+    "product_description",
+    "ingredients",
+    "storage_instructions",
+    "warning",
+    "company_address",
+    "nutritional_information",
+    "manufacturer_address"
+]

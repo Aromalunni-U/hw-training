@@ -28,32 +28,62 @@ class Parser:
     def parse_item(self,link, response):
         data = response.json()
 
+        product_name = data["title"]["headline"]
         product_code = data.get("gtin")
         currency = data.get("metadata",{}).get("currency","")
         price = data.get("metadata",{}).get("price",0)
         brand = data.get("brand", {}).get("name", "")
-        images = data.get("images", [{}])[0].get("src")
+        images = data.get("images", [{}])
         breadcrumb = data.get("breadcrumbs", [])
         rating = data.get("rating", {}).get("ratingValue", 0)
         review = data.get("rating").get("ratingCount",0)
 
+        images = [image["src"] for image in images]
+        features = ""
         description = ""
+        ingredients = ""
+        storage_instructions = ""
         warning = ""
+        company_address = ""
+        nutritional_information = ""
+        manufacturer_address = ""
+        
 
         for group in data.get("descriptionGroups",[]):
             header = group.get("header")
+            content_block = group.get("contentBlock", [])
+
+            if header == "Značilnosti":
+                features = content_block[0]["descriptionList"][0]["description"]
 
             if header == "Opis izdelka":
-                for block in group.get("contentBlock", []):
+                for block in content_block:
                     if "texts" in block:
                         description = block["texts"][0]
                         break
             
-            if header == "Opozorila":
-                content_block = group.get("contentBlock", [])
-                if content_block and "texts" in content_block[0]:
-                    warning = content_block[0]["texts"][0]
+            if header == "Sestavine" and "texts" in content_block[0]:
+                raw_ingredients = content_block[0]["texts"][0]
+                ingredients = raw_ingredients.replace("\n", " ") 
+            
+            if header == "Navodila za shranjevanje":
+                storage_instructions = content_block[0]["texts"][0]
 
+            if header == "Opozorila":
+                warning = content_block[0]["texts"][0]
+
+            if header == "Naslov podjetja":
+                raw_company_address = content_block[0]["texts"][0]
+                company_address = raw_company_address.replace("\n"," ")
+            
+            if header == "Hranilne vrednosti":
+                table = content_block[0].get("table", [])
+                nutritional_information = {
+                    raw[0]:raw[1] for raw in table[1:]
+                }
+            
+            if header == "Proizvedeno v":
+                manufacturer_address = content_block[0]["texts"][0]
 
         if breadcrumb:
             breadcrumb = " > ".join(breadcrumb)
@@ -61,6 +91,7 @@ class Parser:
         item = {}
 
         item["pdp_url"] = link
+        item["product_name"] = product_name
         item["product_code"] = product_code
         item["product_price"] = price   
         item["currency"] = currency
@@ -69,8 +100,14 @@ class Parser:
         item["breadcrumb"] = breadcrumb
         item["rating"] = rating
         item["review"] = review
+        item["features"] = features
         item["product_description"] = description
+        item["ingredients"] = ingredients
+        item["storage_instructions"] = storage_instructions
         item["warning"] = warning 
+        item["company_address"] = company_address
+        item["nutritional_information"] = nutritional_information
+        item["manufacturer_address"] = manufacturer_address
 
         logging.info(item)
         self.parser_collection.insert_one(item)
