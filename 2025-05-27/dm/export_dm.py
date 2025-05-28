@@ -33,6 +33,10 @@ class Export:
             company_address = item.get("company_address")
             nutritional_information = item.get("nutritional_information")
             manufacturer_address = item.get("manufacturer_address")
+            promotion_valid_from = item.get("promotion_valid_from")
+            promotion_valid_upto= item.get("promotion_valid_upto")
+            promotion_description= item.get("promotion_description")
+            percentage_discount= item.get("percentage_discount")
 
             data = [
                 pdp_url,
@@ -52,13 +56,17 @@ class Export:
                 warning,
                 company_address,
                 nutritional_information,
-                manufacturer_address
+                manufacturer_address,
+                promotion_valid_from,
+                promotion_valid_upto,
+                promotion_description,
+                percentage_discount
             ]
             self.writer.writerow(data)
 
 
 with open(file_name, "a", encoding="utf-8",newline="") as file:
-        writer_file = csv.writer(file, delimiter="|")
+        writer_file = csv.writer(file, delimiter=",")
         export = Export(writer_file)
         export.start()
         file.close()

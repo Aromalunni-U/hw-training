@@ -50,4 +50,8 @@ FILE_HEADERS = [
     "company_address",
     "nutritional_information",
     "manufacturer_address"
+    "promotion_valid_from",
+    "promotion_valid_upto",
+    "promotion_description",
+    "percentage_discount"
 ]

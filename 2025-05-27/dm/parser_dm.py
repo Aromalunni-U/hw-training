@@ -47,6 +47,10 @@ class Parser:
         company_address = ""
         nutritional_information = ""
         manufacturer_address = ""
+        promotion_valid_from = ""
+        promotion_valid_upto = ""
+        promotion_description = ""
+        percentage_discount = 0
         
 
         for group in data.get("descriptionGroups",[]):
@@ -108,6 +112,10 @@ class Parser:
         item["company_address"] = company_address
         item["nutritional_information"] = nutritional_information
         item["manufacturer_address"] = manufacturer_address
+        item["promotion_valid_from"] = promotion_valid_from
+        item["promotion_valid_upto"] = promotion_valid_upto
+        item["promotion_description"] = promotion_description
+        item["percentage_discount"] = percentage_discount
 
         logging.info(item)
         self.parser_collection.insert_one(item)
