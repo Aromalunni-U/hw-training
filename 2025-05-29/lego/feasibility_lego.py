@@ -9,8 +9,6 @@ headers = {
     "user-agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
 }
 
-
-
 ###################### CRAWLER #########################
 
 url = "https://www.lego.com/en-in/categories/all-sets"
@@ -28,24 +26,46 @@ print(products_urls)
 
 ###################### PARSER ###########################
 
-url = "https://www.lego.com/en-in/product/venator-class-republic-attack-cruiser-75367"
 
-response = requests.get(url=url,headers=headers)
+url = "https://www.lego.com/api/graphql/ProductDetails"
 
-response = Selector(response.text)
+params = {
+    "variables": '{"slug":"venator-class-republic-attack-cruiser-75367"}',
+    "extensions": '{"locale":"en-IN","persistedQuery":{"version":1,"sha256Hash":"40fed00a62a3fc6939e86f25af6bf7604a81992012f22cd079e1341854deee22"}}'
+}
 
-product_name_xpath = '//h1[@data-test="product-overview-name"]/span/text()'
-breadcrumb_xpath = '//ol[contains(@class, "breadcrumbList")]//li'
-ages_xpath = ""
+headers = {
+    "accept": "*/*",
+    "content-type": "application/json",
+    "x-apollo-operation-name": "ProductDetails",
+    "referer": "https://www.lego.com/en-in/product/venator-class-republic-attack-cruiser-75367",
+    "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36",
+    "x-locale": "en-IN"
+}
 
-product_name = response.xpath(product_name_xpath).get()
-raw_breadcrumb = response.xpath(breadcrumb_xpath)
-ages = response.xpath(ages_xpath).get()
+response = requests.get(url, headers=headers, params=params)
 
-breadcrumb = []
-for li in raw_breadcrumb:
-    text = li.xpath('string(.//span[@data-test="markup"])').get().strip()
-    breadcrumb.append(text)
+data = response.json()
 
-print(ages)
+data = data.get("data",{}).get("product",{})
+attributes = data.get("readOnlyVariant",{}).get("attributes",{})
+product_media = data.get("productMedia", {}).get("items", [])
 
+
+product_code = data.get("productCode","")
+product_name = data.get("name","")
+ages = attributes.get("ageRange","")
+piece_count = attributes.get("pieceCount","")
+build_height = attributes.get("buildHeight","")
+build_width = attributes.get("buildWidth","")
+build_depth = attributes.get("buildDepth","")
+minifigure_count = attributes.get("minifigureCount","")
+description = data.get("description","")
+features = data.get("featuresText","")
+images = [
+    img["baseImgUrl"] for img in product_media if img.get("__typename") == "ProductImage"
+]
+
+########### FINDING ##################
+
+# Unique set number or product code  found at the end of each URL

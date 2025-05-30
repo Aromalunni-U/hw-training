@@ -73,3 +73,6 @@ if product_description:
 variants = variants if variants else ""
 
 
+############## FINDING ######################
+
+# Unique EAN found at the end of each URL
