@@ -45,11 +45,21 @@ sel = Selector(response.text)
 product_name_xpath = '//span[@class="base"]/text()'
 price_xpath = '//span[@class="price"]/text()'
 composition_xpath = '//div[@class="data item content"]/p/text()'
+description_xpath = '//div[@id="description"]//div[@class="value"]/*[not(self::style)]//text()'
+code_xpath = '//div[@class="product attribute sku"]/div/text()'
+features_xpath = '//td[@data-th="Specifikationer"]/ul/li/text()'
+image_xpath = '//img[@class="gallery-placeholder__image"]/@src'
 
 product_name = sel.xpath(product_name_xpath).get()
 price = sel.xpath(price_xpath).get()
 material_composition = sel.xpath(composition_xpath).get()
-
+description = sel.xpath(description_xpath).getall()
 selling_price = price.split()[0]
 currency = price.split()[1]
+code = sel.xpath(code_xpath).get()
+features = sel.xpath(features_xpath).getall()
+images = sel.xpath(image_xpath).getall()
+
+product_description = " ".join([text.strip() for text in description if text.strip()])
+features = " ".join(features)
 
