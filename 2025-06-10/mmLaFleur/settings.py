@@ -17,7 +17,8 @@ HEADERS = {
 MONGO_URI = "mongodb://localhost:27017/"  
 DB_NAME = "mmlafleur"
 PARSE_COLLECTION = "parser"
-CRAWLER_COLLECTION = "crawler"  
+CRAWLER_COLLECTION = "crawler" 
+FAILED_COLLECTION = "failed"
 
 
 file_name = "2025-06-10/mmLaFleur/mmlafleur.csv"

@@ -1,7 +1,7 @@
 import requests
 from pymongo import MongoClient
 import logging
-from settings import MONGO_URI, PARSE_COLLECTION, DB_NAME, CRAWLER_COLLECTION, HEADERS
+from settings import MONGO_URI, PARSE_COLLECTION, DB_NAME, CRAWLER_COLLECTION, HEADERS, FAILED_COLLECTION
 from parsel import Selector
 import re
 
@@ -11,6 +11,7 @@ class Parser:
         self.db = self.client[DB_NAME]
         self.crawler_collection = self.db[CRAWLER_COLLECTION]
         self.parser_collection = self.db[PARSE_COLLECTION]
+        self.failed_collection = self.db[FAILED_COLLECTION]
 
     def start(self):
         links = self.crawler_collection.find()
@@ -20,7 +21,9 @@ class Parser:
             if response.status_code == 200:
                 self.parse_iem(link,response)
             else:
-                logging.error(response.status_code)
+                self.failed_collection.insert_one(
+                    {"url": link, "status": response.status_code}
+                    )
 
 
     def parse_iem(self,url,response):
@@ -115,7 +118,7 @@ class Parser:
         item["3_star"] = star_3
         item["4_star"] = star_4
         item["5_star"] = star_5
-        item["review text"] = review_text
+        item["review_text"] = review_text
 
         logging.info(item)
         self.parser_collection.insert_one(item)

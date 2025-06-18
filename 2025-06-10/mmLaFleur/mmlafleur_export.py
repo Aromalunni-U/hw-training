@@ -23,11 +23,11 @@ class Export:
             category = item.get("category")
             brand = item.get("brand")
             total_number_of_reviews = item.get("total_number_of_reviews")
-            star_1 = item.get("star_1")
-            star_2 = item.get("star_2")
-            star_3 = item.get("star_3")
-            star_4 = item.get("star_4")
-            star_5 = item.get("star_5")
+            star_1 = item.get("1_star")
+            star_2 = item.get("2_star")
+            star_3 = item.get("3_star")
+            star_4 = item.get("4_star")
+            star_5 = item.get("5_star")
             review_text= item.get("review_text")
 
 

@@ -23,7 +23,7 @@ class Crawler:
             
             product_urls = re.findall(r'"url":"(/products/[^"]+)"', script_text)
             for url in product_urls:
-                pdp_url = {"url":"https://mmlafleur.com/" + url}
+                pdp_url = {"url":f"https://mmlafleur.com/{url}"}
                 logging.info(pdp_url)
                 self.collection.insert_one(pdp_url)
         else:
