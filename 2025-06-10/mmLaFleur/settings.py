@@ -24,7 +24,7 @@ FAILED_COLLECTION = "failed"
 file_name = "2025-06-10/mmLaFleur/mmlafleur.csv"
 
 FILE_HEADERS = [
-    "pdp_url",
+"pdp_url",
     "product_name",
     "product_sku",
     "original_price",

@@ -1,17 +1,18 @@
+import re
 import requests
 from pymongo import MongoClient
 import logging
-from settings import MONGO_URI, PARSE_COLLECTION, DB_NAME, CRAWLER_COLLECTION, HEADERS, FAILED_COLLECTION
+from settings import MONGO_URI, DB_NAME, CRAWLER_COLLECTION, HEADERS
 from parsel import Selector
-import re
+from mongoengine import connect
+from mmlafleur_items import ProductItem, FailedItem
+
 
 class Parser:
     def __init__(self):
+        connect(DB_NAME, host=MONGO_URI, alias="default")
         self.client = MongoClient(MONGO_URI)
-        self.db = self.client[DB_NAME]
-        self.crawler_collection = self.db[CRAWLER_COLLECTION]
-        self.parser_collection = self.db[PARSE_COLLECTION]
-        self.failed_collection = self.db[FAILED_COLLECTION]
+        self.crawler_collection = self.client[DB_NAME][CRAWLER_COLLECTION]
 
     def start(self):
         links = self.crawler_collection.find()
@@ -21,10 +22,8 @@ class Parser:
             if response.status_code == 200:
                 self.parse_iem(link,response)
             else:
-                self.failed_collection.insert_one(
-                    {"url": link, "status": response.status_code}
-                    )
-
+                product_item = FailedItem(url = link, source ="parser")
+                product_item.save()
 
     def parse_iem(self,url,response):
         sel = Selector(response.text)
@@ -55,6 +54,7 @@ class Parser:
         product_sku = product_sku.group(1) if product_sku else ""
         category = category.group(1) if category else ""
         brand = brand.group(1) if brand else ""
+        original_price = original_price.replace("$",'')
 
         api_url = "https://api-cdn.yotpo.com/v3/storefront/store/hnkji0K4D1gfLABJN4GggiPDnm5GQdw5TAk6pRSp/product/{}/reviews".format(empi.group(1))
 
@@ -86,14 +86,17 @@ class Parser:
             review_text = []
             total_pages = (total_number_of_reviews // 50) + (1 if total_number_of_reviews % 50 > 0 else 0)
             print(total_pages)
+
             for page in range(1, total_pages + 1):
                 params["page"] = page
                 response = requests.get(api_url, params=params)
                 reviews = response.json().get("reviews", [])
+
                 review_list = [
                     review.get("content", "").replace("\n","")
                     for review in reviews if review.get("content")
                     ]
+                
                 review_text.extend(review_list)
         else:
             raw_reviews = data.get("reviews",[])
@@ -121,9 +124,10 @@ class Parser:
         item["review_text"] = review_text
 
         logging.info(item)
-        self.parser_collection.insert_one(item)
+        product_item = ProductItem(**item)
+        product_item.save()
 
 
-
-parser = Parser()
-parser.start()
+if __name__ == "__main__":
+    parser_obj = Parser()
+    parser_obj.start()
