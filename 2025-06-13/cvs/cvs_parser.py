@@ -3,17 +3,14 @@ import re
 import json
 from parsel import Selector
 from curl_cffi import requests
-from settings import HEADERS, DB_NAME, MONGO_URI, PARSE_COLLECTION
-from pymongo import MongoClient
-
+from settings import HEADERS, DB_NAME, MONGO_URI
+from mongoengine import connect
+from cvs_items import FailedItem, ProductItem
 
 
 class Parser:
     def __init__(self,urls):
-        self.pdp_urls = urls
-        self.client = MongoClient(MONGO_URI)
-        self.db = self.client[DB_NAME]
-        self.parser_collection = self.db[PARSE_COLLECTION]
+        connect(DB_NAME, host=MONGO_URI, alias="default")
 
     def start(self):
         for link in pdp_urls:
@@ -21,7 +18,8 @@ class Parser:
             if response.status_code == 200:
                 self.parse_iem(link,response)
             else:
-                logging.error(response.status_code)
+                failed_url = FailedItem(url=link)
+                failed_url.save()
 
     def parse_iem(self,url,response):
         sel = Selector(response.text)
@@ -88,11 +86,9 @@ class Parser:
         if spec_match:
             raw_spec = spec_match.group(1)
             specification = raw_spec.replace('\\"', '"')
-            print(specification)
             specification = specification.replace('["', '"').replace('"]', '"')
-            print(specification)
 
-        images = ["https://www.cvs.com/" + img for img in images]
+        images = [f"https://www.cvs.com/{img}" for img in images]
 
         item = {}
 
@@ -117,12 +113,13 @@ class Parser:
         item["images"] = images
 
         logging.info(item)
-        # self.parser_collection.insert_one(item)
+        data_item = ProductItem(**item)
+        data_item.save()
 
 
 pdp_urls = [
     "https://www.cvs.com/shop/crest-premium-plus-scope-dual-blast-toothpaste-intense-mint-7-2-oz-prodid-637529",
-    "https://www.cvs.com/shop/dr-emil-5-htp-plus-brain-mood-sleep-support-capsules-60-ct-prodid-724953"
+    "https://www.cvs.com/shop/dr-emil-5-htp-plus-brain-mood-sleep-support-capsules-60-ct-prodid-724953",
     "https://www.cvs.com/shop/preservision-areds-2-formula-eye-vitamin-mineral-supplement-soft-gels-prodid-1040130",
     "https://www.cvs.com/shop/nature-s-truth-apple-cider-vinegar-1200-mg-prodid-524868",
     "https://www.cvs.com/shop/olly-probiotic-gummy-tropical-mango-80-ct-prodid-547007",
@@ -130,5 +127,7 @@ pdp_urls = [
     "https://www.cvs.com/shop/ocuvite-eye-vitamin-mineral-supplement-adult-prodid-1040133",
 ]
 
-parser = Parser(pdp_urls)
-parser.start()
+
+if __name__ == "__main__":
+    parser = Parser(pdp_urls)
+    parser.start()

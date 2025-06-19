@@ -24,3 +24,4 @@ HEADERS = {
 MONGO_URI = "mongodb://localhost:27017/"  
 DB_NAME = "cvs"
 PARSE_COLLECTION = "parser"
+MONGO_COLLECTION_URL_FAILED = "cvs_url_failed"
