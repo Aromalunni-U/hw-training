@@ -1,15 +1,15 @@
 import requests
 import logging
-from settings import HEADERS, MONGO_URI, CRAWLER_COLLECTION, DB_NAME, BASE_URL
-from pymongo import MongoClient
+from settings import HEADERS, MONGO_URI, DB_NAME, BASE_URL
 from parsel import Selector
+from almayaonline_items import ProductUrlItem, CategoryItem, FailedItem
+from mongoengine import connect
+from urllib.parse import urlparse
 
 
 class Crawler:
     def __init__(self):
-        self.client = MongoClient(MONGO_URI)
-        self.db = self.client[DB_NAME]
-        self.collection = self.db[CRAWLER_COLLECTION]
+        connect(DB_NAME, host=MONGO_URI, alias="default")
     
     def start(self):
         response = requests.get(BASE_URL,headers=HEADERS)
@@ -18,21 +18,41 @@ class Crawler:
         category_urls = [BASE_URL + url  for url in categories]
 
         for url in category_urls:
+                category_item = CategoryItem(url=url)
+                category_item.save()
                 self.scrape_category_pages(url)
 
     def scrape_category_pages(self, category_url):
-         while category_url:
-                response = requests.get(category_url, headers=HEADERS)
+        parsed = urlparse(category_url)
+        category_path = parsed.path.strip("/") 
+        base_category_url = f"{BASE_URL}/{category_path}"
+
+        page_number = 1
+        while True:
+                if page_number == 1:
+                    paged_url = base_category_url
+                else:
+                    paged_url = f"{base_category_url}?pagenumber={page_number}"     
+
+                response = requests.get(paged_url, headers=HEADERS)
 
                 if response.status_code == 200:
                     sel = Selector(response.text)
+                    product_urls = sel.xpath('//h2[@class="product-title"]/a/@href').getall()
+
+                    if not product_urls:
+                        break
 
                     self.scrape_pdp_links(sel)
+                    page_number += 1
 
-                    next_page = sel.xpath('//li[@class="next-page"]/a/@href').get()
-                    category_url = next_page if next_page else None
                 else:
-                     logging.warning(f"Failed ({response.status_code}):{category_url}")
+                    if response.status_code == 500:
+                         break
+                    else:
+                        failed_item = FailedItem(url=category_url, source="crawler")
+                        failed_item.save()
+                        page_number += 1
 
     def scrape_pdp_links(self, selector):
         product_urls = selector.xpath('//h2[@class="product-title"]/a/@href').getall()
@@ -40,8 +60,10 @@ class Crawler:
         for url in product_urls:
             pdp_url = {"url":f"https://www.almayaonline.com{url}"}
             logging.info(pdp_url)
-            self.collection.insert_one(pdp_url)
+            data_item = ProductUrlItem(**pdp_url)
+            data_item.save()
             
-        
-crawler = Crawler()
-crawler.start()
+
+if __name__ == "__main__":
+    crawler = Crawler()
+    crawler.start()
