@@ -48,7 +48,7 @@ class Parser:
             sales_price = 0
         else:
             original_price = sel.xpath(original_price_xpath).get()
-            sales_price = sel.xpath(sales_price_xpath).get()
+            sales_price = sel.xpath(sales_price_xpath).get().replace("$","")
 
         product_name = product_name.replace("\n","").strip()
         product_sku = product_sku.group(1) if product_sku else ""
@@ -56,56 +56,46 @@ class Parser:
         brand = brand.group(1) if brand else ""
         original_price = original_price.replace("$",'')
 
-        api_url = "https://api-cdn.yotpo.com/v3/storefront/store/hnkji0K4D1gfLABJN4GggiPDnm5GQdw5TAk6pRSp/product/{}/reviews".format(empi.group(1))
+        page_no = 1
+        review_text = []
 
-        params = {
-            "page": 1,
-            "perPage": 50,
-            "sort": "date,rating,badge,images"
-        }
-        response = requests.get(api_url, params=params)
-        data = response.json()
+        while True:
+            api_url = "https://api-cdn.yotpo.com/v3/storefront/store/hnkji0K4D1gfLABJN4GggiPDnm5GQdw5TAk6pRSp/product/{}/reviews".format(empi.group(1))
 
-        total_number_of_reviews = data.get("bottomline",{}).get("totalReview","")
-        if total_number_of_reviews == 0:
-            logging.info(f"No reviews found for: {product_name}")
-            return 
-        
-        stars = data.get("bottomline",{}).get("starDistribution",{})
+            params = {
+                "page": page_no,
+                "perPage": 50,
+                "sort": "date,rating,badge,images"
+            }
+            response = requests.get(api_url, params=params)
+            data = response.json()
 
-        if stars:
-            star_1 = stars.get("1",0)
-            star_2 = stars.get("2",0)
-            star_3 = stars.get("3",0)
-            star_4 = stars.get("4",0)
-            star_5 = stars.get("5",0)
-        else:
-            star_1, star_2, star_3, star_4, star_5 = 0, 0, 0, 0, 0
-
-        if total_number_of_reviews > 50:
-            review_text = []
-            total_pages = (total_number_of_reviews // 50) + (1 if total_number_of_reviews % 50 > 0 else 0)
-            print(total_pages)
-
-            for page in range(1, total_pages + 1):
-                params["page"] = page
-                response = requests.get(api_url, params=params)
-                reviews = response.json().get("reviews", [])
-
-                review_list = [
-                    review.get("content", "").replace("\n","")
-                    for review in reviews if review.get("content")
-                    ]
-                
-                review_text.extend(review_list)
-        else:
+            total_number_of_reviews = data.get("bottomline",{}).get("totalReview",0)
             raw_reviews = data.get("reviews",[])
-            review_text = [
-                review.get("content","").replace("\n","") 
-                for review in raw_reviews
-                ]
-        
 
+            stars = data.get("bottomline",{}).get("starDistribution",{})
+            if stars:
+                star_1 = stars.get("1",0)
+                star_2 = stars.get("2",0)
+                star_3 = stars.get("3",0)
+                star_4 = stars.get("4",0)
+                star_5 = stars.get("5",0)
+            else:
+                star_1, star_2, star_3, star_4, star_5 = 0, 0, 0, 0, 0 
+    
+            if total_number_of_reviews == 0:
+                logging.info(f"No reviews found for: {product_name}")
+                return     
+
+            if not raw_reviews:
+                break
+
+            review_text.extend([
+                                review.get("content", "").replace("\n", "") 
+                                for review in raw_reviews
+                            ])
+            page_no +=1
+            
         item = {}
 
         item["pdp_url"] = url

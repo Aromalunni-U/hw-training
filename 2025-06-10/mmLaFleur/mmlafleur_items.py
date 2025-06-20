@@ -16,7 +16,7 @@ class ProductItem(DynamicDocument):
     star_1 = IntField()
     star_2 = IntField()
     star_3 = IntField()
-    star_4 = IntField()
+    star_4 = IntField() 
     star_5 = IntField()
 
     review_text = ListField(StringField())  
