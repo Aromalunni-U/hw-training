@@ -1,5 +1,5 @@
 from mongoengine import DynamicDocument, StringField, IntField, FloatField, ListField
-from settings import PARSE_COLLECTION, FAILED_COLLECTION
+from settings import PARSE_COLLECTION, FAILED_COLLECTION, CATEGORY_COLLECTION
 
 class ProductItem(DynamicDocument):
     meta = {"db_alias": "default", "collection":PARSE_COLLECTION}
@@ -23,4 +23,8 @@ class ProductItem(DynamicDocument):
 
 class FailedItem(DynamicDocument):
     meta = {"db_alias": "default", "collection":FAILED_COLLECTION}
+    url = StringField(required=True)
+
+class CategoryItem(DynamicDocument):
+    meta = {"db_alias": "default", "collection": CATEGORY_COLLECTION}
     url = StringField(required=True)

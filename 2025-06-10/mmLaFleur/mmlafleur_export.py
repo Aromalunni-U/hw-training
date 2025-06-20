@@ -50,9 +50,10 @@ class Export:
             self.writer.writerow(data)
 
 
-with open(file_name, "a", encoding="utf-8",newline="") as file:
-        writer_file = csv.writer(file, delimiter=",")
-        export = Export(writer_file)
-        export.start()
-        file.close()
+if __name__ == "__main__":
+    with open(file_name, "a", encoding="utf-8",newline="") as file:
+            writer_file = csv.writer(file, delimiter=",")
+            export = Export(writer_file)
+            export.start()
+            file.close()
 
