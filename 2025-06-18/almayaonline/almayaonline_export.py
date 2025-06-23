@@ -15,13 +15,13 @@ class Export:
         logging.info(FILE_HEADERS)
 
         for item in db[PARSE_COLLECTION].find():
-            url = item.get("pdp_url")
-            product_name = item.get("product_name")
-            unique_id = item.get("unique_id")
-            currency = item.get("currency")
-            regular_price = item.get("regular_price")
-            images = item.get("images")
-            product_description = item.get("product_description") 
+            url = item.get("pdp_url", "")
+            product_name = item.get("product_name", "")
+            unique_id = item.get("unique_id", "")
+            currency = item.get("currency", "")
+            regular_price = item.get("regular_price", "")
+            images = item.get("images", "")
+            product_description = item.get("product_description", "") 
 
             data = [
                  url,
