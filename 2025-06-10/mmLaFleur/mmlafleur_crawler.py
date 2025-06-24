@@ -1,33 +1,59 @@
 import requests
 import logging
-from settings import HEADERS, MONGO_URI, CRAWLER_COLLECTION, DB_NAME
+from settings import HEADERS, MONGO_URI, DB_NAME, CATEGORY_COLLECTION
 from pymongo import MongoClient
-from parsel import Selector
-import re
+from mmlafleur_items import FailedItem, ProductUrlItem
+from mongoengine import connect
 
 
 class Crawler:
     def __init__(self):
+        connect(DB_NAME, host=MONGO_URI, alias="default")
         self.client = MongoClient(MONGO_URI)
-        self.db = self.client[DB_NAME]
-        self.collection = self.db[CRAWLER_COLLECTION]
+        self.category_collection = self.client[DB_NAME][CATEGORY_COLLECTION]
     
     def start(self):
-        url = "https://mmlafleur.com/collections/dresses"
-        response = requests.get(url,headers=HEADERS)
-
-        if response.status_code:
-            sel = Selector(response.text)
-            script_text = sel.xpath(
-                "//script[@id='web-pixels-manager-setup']/text()").get()
+        for category_url in self.category_collection.find():
+            category_url = category_url.get("url")
             
-            product_urls = re.findall(r'"url":"(/products/[^"]+)"', script_text)
-            for url in product_urls:
-                pdp_url = {"url":f"https://mmlafleur.com{url}"}
-                logging.info(pdp_url)
-                self.collection.insert_one(pdp_url)
-        else:
-            logging.error(response.status_code)
+            category_name = category_url.split("/")[-1]
+            page_no = 1
+
+            while True:
+                api_url = f"https://mmlafleur.com/collections/{category_name}?page={page_no}&view=ajax"
+                response = requests.get(api_url,headers=HEADERS)
+
+                if response.status_code == 200:
+                    data = response.json()
+                    if data:
+                        for item in data:
+                            for swatch in item.get("swatches",[]):
+                                url = swatch.get("url","")
+                                color = swatch.get("color", "")
+                                product_id = swatch.get("id","")
+                                if url:
+                                    item = {
+                                        "url":url,
+                                        "color":color,
+                                        "product_id":product_id,
+                                        "category":category_name
+                                        }
+                                    logging.info(item)
+                                    
+                                    if not ProductUrlItem.objects(url=url).first():
+                                        data_item = ProductUrlItem(**item)
+                                        data_item.save()
+                                    else:
+                                        logging.info(f"Duplicate url: {url}")
+                    else:
+                        logging.info(f"Completed : {category_name}")
+                        break
+                else:
+                    logging.error(response.status_code)
+                    FailedItem(url = api_url, source ="crawler_api").save()
+                
+                page_no +=1
+
 
 
 if __name__ == "__main__":

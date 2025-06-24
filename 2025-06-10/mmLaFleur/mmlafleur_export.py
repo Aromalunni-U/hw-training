@@ -15,20 +15,20 @@ class Export:
         logging.info(FILE_HEADERS)
 
         for item in db[PARSE_COLLECTION].find():
-            url = item.get("pdp_url")
-            product_name = item.get("product_name")
+            url = item.get("pdp_url", "")
+            product_name = item.get("product_name", "")
             product_sku = item.get("product_sku")
-            original_price = item.get("original_price")
-            sales_price = item.get("sales_price")
-            category = item.get("category")
-            brand = item.get("brand")
-            total_number_of_reviews = item.get("total_number_of_reviews")
-            star_1 = item.get("1_star")
-            star_2 = item.get("2_star")
-            star_3 = item.get("3_star")
-            star_4 = item.get("4_star")
-            star_5 = item.get("5_star")
-            review_text= item.get("review_text")
+            original_price = item.get("original_price", "")
+            sales_price = item.get("sales_price", "")
+            category = item.get("category", "")
+            brand = item.get("brand", "")
+            total_number_of_reviews = item.get("total_number_of_reviews", "")
+            star_1 = item.get("1_star", "")
+            star_2 = item.get("2_star", "")
+            star_3 = item.get("3_star", "")
+            star_4 = item.get("4_star", "")
+            star_5 = item.get("5_star", "")
+            review_text= item.get("review_text", "")
 
 
             data = [
