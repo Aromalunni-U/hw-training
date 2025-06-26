@@ -1,10 +1,11 @@
 import requests
 from parsel import Selector
-from urllib.parse import urljoin
 
 BASE_URL = "https://sunlife.qa/"
 
 url = "https://sunlife.qa/ajax/categoriesdropdown"
+
+api_url = "https://nm61sop7f5thlwecp.a1.typesense.net/multi_search?x-typesense-api-key=tSKaWnwrBRsMZnIGKLFCxNDM3qS7ChXz"
 
 HEADERS = {
     "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
@@ -13,30 +14,62 @@ HEADERS = {
 }
 
 
-#  CATEGORY
+################### CATEGORY  ##########################
 
 response = requests.get(url=url, headers= HEADERS)
 sel = Selector(response.text)
 catefory_url = sel.xpath('//a[@class="catname smaller"]/@href').getall()
 
 
-# SUB CATEGORY
+################## SUB CATEGORY #########################
 
 for url in catefory_url:
     response = requests.get(url=url, headers= HEADERS)
     sel = Selector(response.text)
     sub_category = sel.xpath('//p[@class="heading-card pb-30"]/a/@href').getall()
 
-# CRAWLER 
+################## CRAWLER ##############################
 
 
 url = "https://sunlife.qa/product-category/coloring"
 
-response = requests.get(url=url, headers= HEADERS)
-sel = Selector(response.text)
+page_no = 1
+category_name = url.split("/")[-1]
+
+while True:
+    payload = f'''
+        {{
+          "searches": [
+            {{
+              "query_by": "name,sku",
+              "sort_by": "is_out_stock:asc,in_promo:desc,name:asc",
+              "highlight_full_fields": "name,sku",
+              "collection": "ec_products",
+              "q": "*",
+              "facet_by": "brand,categories,offer_label_en,price",
+              "filter_by": "categories:=[{category_name}]",
+              "max_facet_values": 50,
+              "page": {page_no}
+            }}
+          ]
+        }}
+        '''    
+    response = requests.post(url=api_url, data=payload, headers=HEADERS)
+    data = response.json()
+ 
+
+    products = data.get("results",[])[0].get("hits",[])
+    if not products:
+        break
+
+    for product in products:
+        pdp_url = product.get("document",{}).get("url","")
+        print(pdp_url)
+
+    page_no +=1
 
 
-# PARSER
+########################### PARSER ###############################
 
 url = "https://sunlife.qa/shop/placentor-vegetal-anti-age-plumping-lip-balm-4gm"
 
