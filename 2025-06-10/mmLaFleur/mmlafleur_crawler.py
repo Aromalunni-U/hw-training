@@ -4,6 +4,7 @@ from settings import HEADERS, MONGO_URI, DB_NAME, CATEGORY_COLLECTION
 from pymongo import MongoClient
 from mmlafleur_items import FailedItem, ProductUrlItem
 from mongoengine import connect
+from mongoengine.errors import NotUniqueError
 
 
 class Crawler:
@@ -21,39 +22,42 @@ class Crawler:
 
             while True:
                 api_url = f"https://mmlafleur.com/collections/{category_name}?page={page_no}&view=ajax"
+                
                 response = requests.get(api_url,headers=HEADERS)
 
                 if response.status_code == 200:
                     data = response.json()
                     if data:
-                        for item in data:
-                            for swatch in item.get("swatches",[]):
-                                url = swatch.get("url","")
-                                color = swatch.get("color", "")
-                                product_id = swatch.get("id","")
-                                if url:
-                                    item = {
-                                        "url":url,
-                                        "color":color,
-                                        "product_id":product_id,
-                                        "category":category_name
-                                        }
-                                    logging.info(item)
-                                    
-                                    if not ProductUrlItem.objects(url=url).first():
-                                        data_item = ProductUrlItem(**item)
-                                        data_item.save()
-                                    else:
-                                        logging.info(f"Duplicate url: {url}")
+                        self.parse_item(data, category_name)
                     else:
                         logging.info(f"Completed : {category_name}")
                         break
                 else:
                     logging.error(response.status_code)
-                    FailedItem(url = api_url, source ="crawler_api").save()
+                    FailedItem(url = category_url, source ="crawler_api").save()
                 
                 page_no +=1
 
+    def parse_item(self,data,category_name):
+        for item in data:
+            for swatch in item.get("swatches",[]):
+                url = swatch.get("url","")
+                color = swatch.get("color", "")
+                product_id = swatch.get("id","")
+             
+                item = {}
+
+                item["url"] = url
+                item["color"] = color
+                item["product_id"] = product_id
+                item["category"] = category_name
+                
+                logging.info(item)
+                try:
+                    data_item = ProductUrlItem(**item)
+                    data_item.save()
+                except NotUniqueError:
+                    logging.warning(f"Duplicate url: {url}")
 
 
 if __name__ == "__main__":
