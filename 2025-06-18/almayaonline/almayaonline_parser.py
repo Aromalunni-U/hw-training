@@ -15,14 +15,9 @@ class Parser:
 
     def start(self):
         links = self.crawler_collection.find()
-        parsed_urls = set(ProductItem.objects().scalar("pdp_url"))
 
         for link in links:
-            link = link.get("url")
-
-            if link in parsed_urls:
-                logging.info(f"Skipping parsed URL: {link}")
-                continue
+            link = link.get("url","")
 
             response = requests.get(link,headers=HEADERS)
             if response.status_code == 200:
@@ -55,6 +50,8 @@ class Parser:
         if price:
             currency = price.split()[0]
             regular_price = price.split()[1]
+        else:
+            currency, regular_price = "", ""
 
         product_description = product_description.strip() if product_description else ""
         

@@ -12,13 +12,17 @@ class ProductItem(DynamicDocument):
     unique_id = StringField()
     currency = StringField()
     regulat_price =  FloatField()
-    product_description = StringField()
     images = StringField()
+    product_description = StringField()
 
 
 class ProductUrlItem(DynamicDocument):
     meta = {"db_alias": "default", "collection": CRAWLER_COLLECTION}
     url = StringField(required=True)
+    product_name = StringField()
+    regular_price = FloatField()
+    currency = StringField()
+    images = StringField()
 
 class CategoryItem(DynamicDocument):
     meta = {"db_alias": "default", "collection": MONGO_COLLECTION_CATEGORY}
