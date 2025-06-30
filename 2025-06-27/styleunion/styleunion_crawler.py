@@ -49,6 +49,10 @@ class Crawler:
 
         for card in product_card:
             pdp_url = card.xpath(PDP_URL_XPATH).get()
+            
+            if "/collections/womens-tops/" not in pdp_url:
+                continue
+
             product_name = card.xpath(PRODUCT_NAME_XPATH).get()
             regular_price = card.xpath(REGULAR_PRICE_XPATH).get()
             image = card.xpath(IMAGE_XPATH).get()

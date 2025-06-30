@@ -4,7 +4,7 @@ import logging
 from parsel import Selector
 from pymongo import MongoClient
 from styleunion_items import  FailedItem, ProductItem
-from settings import MONGO_URI, DB_NAME, HEADERS, CRAWLER_COLLECTION
+from settings import MONGO_URI, DB_NAME, HEADERS, CRAWLER_COLLECTION, PARSE_COLLECTION
 
 
 
@@ -13,12 +13,17 @@ class Parser:
         connect(DB_NAME, host=MONGO_URI, alias="default")
         self.client = MongoClient(MONGO_URI)
         self.crawler_collection = self.client[DB_NAME][CRAWLER_COLLECTION]
+        self.parser_collection = self.client[DB_NAME][PARSE_COLLECTION]
 
     def start(self):
         links = self.crawler_collection.find()
 
         for link in links:
             link = link.get("url","")
+
+            if self.parser_collection.find_one({"pdp_url": link}):
+                logging.info(f"Skipping already parsed: {link}")
+                continue
 
             response = requests.get(link,headers=HEADERS)
             if response.status_code == 200:
@@ -37,58 +42,46 @@ class Parser:
         COLOR_XPATH = '//span[@class="swatches__color-name"]/text()'
         SKU_XPATH = '//span[@id="variantSku"]/text()'
         SIZE_XPATH = '//label[@class="swatches__form--label"]/text()'
-        CARE_INSTRUCTIONS_TEXT = '//div[h3[text()="Wash and Care"]]/following-sibling::div/text()'
+        CARE_INSTRUCTIONS_TEXT = (
+            '//div[h3[text()="Wash and Care"]]/following-sibling::div/text()[normalize-space()]'
+            '| //div[h3[text()="Wash and Care"]]/following-sibling::div/p/text()[normalize-space()]'
+        )
         CARE_INSTRUCTIONS_LIST = (
             '//div[h3[text()="Wash and Care"]]/following-sibling::div/ul/li/text()'
-            '|'
-            '//div[h3[text()="Wash and Care"]]/following-sibling::div/li/text()'
+            '| //div[h3[text()="Wash and Care"]]/following-sibling::div/li/text()'
         )
         FABRIC_TYPE_XPATH =  (
             '//strong[text()="Fabric Type:" or text()="Fabric:"]/following-sibling::text()'
-            '|'
-            '//li/b[text()="Fabric type:"]/following-sibling::text()'
+            '| //li/b[text()="Fabric type:"]/following-sibling::text()'
         )
         PATTERN_XPATH = (
             '//strong[text()="Pattern:"]/following-sibling::text()'
-            '|'
-            '//li/b[text()="Pattern:"]/following-sibling::text()'
-            '|'
-            '//b[text()="Pattern:"]/following-sibling::text()'
+            '| //b[text()="Pattern:"]/following-sibling::text()'
         )
         CLOTHING_FIT_XPATH = (
             '//strong[text()="Fit:" or text()="Fit Type:"]/following-sibling::text()'
-            '|'
-            '//li/b[text()="Fit:" or text()="Fit Type:"]/following-sibling::text()'
-            '|'
-            '//b[text()="Fit:" or text()="Fit Type:"]/following-sibling::text()'
+            '| //b[text()="Fit:" or text()="Fit Type:"]/following-sibling::text()'
         )
         POCKET_XPATH = '//strong[text()="Pockets:"]/following-sibling::text()'
 
         SLEEVE_TYPE_XPATH = (
             '//strong[text()="Sleeve Type:"]/following-sibling::text()'
-            '|'
-            '//li/b[text()="Sleeve Type:"]/following-sibling::text()'
-            '|'
-            '//b[text()="Sleeve Type:"]/following-sibling::text()'
+            '| //b[text()="Sleeve Type:"]/following-sibling::text()'
         )
         COLLAR_TYPE_XPATH = (
             '//strong[contains(text(),"Neck") or contains(text(), "Collar")]/following-sibling::text()'
-            '|'
-            '//b[contains(text(),"Neck") or contains(text(), "Collar")]/following-sibling::text()'
+            '| //b[contains(text(),"Neck") or contains(text(), "Collar")]/following-sibling::text()'
         )
-
         CLOATHING_LENGTH_XPATH = (
             '//b[text()="Length:"]/following-sibling::text()'
-            '|'
-            '//strong[text()="Length:"]/following-sibling::text()'
+            '| //strong[text()="Length:"]/following-sibling::text()'
         )
 
         RATING_XPATH = '//div[@class="jdgm-prev-badge"]/@data-average-rating'
         REVIEW_XPATH = '//div[@class="jdgm-prev-badge"]/@data-number-of-reviews'
         DESCRIPTION_XPATH = (
-        '//h3[text()="Description"]/following::div[contains(@class,"acc__panel")]/text()[normalize-space()]'
-        '|'
-        '//div[@class="acc__panel"]//p//text()[normalize-space()]'
+            '//h3[text()="Description"]/following::div[contains(@class,"acc__panel")]/text()[normalize-space()]'
+            '| //h3[text()="Description"]/following::div[contains(@class,"acc__panel")]//p//text()[normalize-space()]'
         )
         IMAGE_XPATH = '//div[@class="box-ratio "]/img[@class="js-thumb-item-img"]/@src'
 
@@ -115,9 +108,9 @@ class Parser:
             care_instructions = sel.xpath(CARE_INSTRUCTIONS_LIST).getall()
             care_instructions = " ".join(care_instructions)
         else:
-            care_instructions = care_instructions.strip()
+            care_instructions = care_instructions.strip() 
         
-        regular_price = regular_price.strip().replace("₹","") if regular_price else ""
+        regular_price = regular_price.strip().replace("₹","").replace(",","") if regular_price else ""
         size = [i.strip() for i in size if i.strip()]
         fabric_type = fabric_type.strip() if fabric_type else ""
         pattern = pattern.strip() if pattern else ""

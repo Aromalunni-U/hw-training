@@ -23,3 +23,24 @@ CRAWLER_COLLECTION = "crawler"
 MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
 
 file_name = "2025-06-27/styleunion/styleunion.csv"
+
+FILE_HEADERS = [
+    "pdp_url",
+    "product_name",
+    "regular_price",
+    "color",
+    "sku",
+    "size",
+    "care_instructions",
+    "fabric_type",
+    "rating",
+    "review",
+    "pattern",
+    "pocket",
+    "clothing_fit",
+    "sleeve_type",
+    "collar_type",
+    "clothing_length",
+    "product_description",
+    "images"
+]
