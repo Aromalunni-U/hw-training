@@ -21,10 +21,6 @@ class Parser:
         for link in links:
             link = link.get("url","")
 
-            if self.parser_collection.find_one({"pdp_url": link}):
-                logging.info(f"Skipping already parsed: {link}")
-                continue
-
             response = requests.get(link,headers=HEADERS)
             if response.status_code == 200:
                 self.parse_item(link,response)
