@@ -58,7 +58,7 @@ class Crawler:
 
             pdp_url = f"{BASE_URL}{pdp_url}"
             image = f"https:{image}" if image else ""
-            regular_price = regular_price.strip() if regular_price else ""
+            regular_price = regular_price.replace(",","").strip() 
 
             item = {}
 
@@ -68,13 +68,13 @@ class Crawler:
             item["image"] = image
 
             logging.info(item)
-            data_item = ProductUrlItem(**item)
-            data_item.save()
-
+            try:
+                ProductUrlItem(**item).save()
+            except:
+                pass
+    
         return True
     
-
-
 
 if __name__ == "__main__":
     crawler = Crawler()

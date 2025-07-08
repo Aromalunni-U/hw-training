@@ -15,7 +15,7 @@ class ProductItem(DynamicDocument):
 
 class ProductUrlItem(DynamicDocument):
     meta = {"db_alias": "default", "collection": CRAWLER_COLLECTION}
-    url = StringField(required = True)
+    url = StringField(required = True, unique = True)
     product_name = StringField()
     regular_price = FloatField()
     images = StringField()
