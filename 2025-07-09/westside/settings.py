@@ -8,6 +8,9 @@ logging.basicConfig(
 
 BASE_URL = "https://www.westside.com"
 
+filter_url = "https://westside-api.wizsearch.in/v1/products/filter"
+
+
 HEADERS = {
     "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
     "accept-language":"en-US,en;q=0.9,hi;q=0.8",
@@ -27,3 +30,17 @@ headers = {
     "x-wizzy-tags": "Device:Desktop,Platform:Linux",
     "x-wizzy-userid": "b235fc16-e7de-449f-9ce2-eb9fc28cecbb"
 }
+
+PROJECT_NAME = "westside"
+
+MONGO_URI = "mongodb://localhost:27017/"  
+DB_NAME = "westside"
+PARSE_COLLECTION = "parser"
+CRAWLER_COLLECTION = "crawler"
+MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
+MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
+
+file_name = "2025-07-09/westside/westside.csv"
+
+
+FILE_HEADERS = []
