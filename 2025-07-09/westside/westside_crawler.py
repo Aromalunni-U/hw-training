@@ -31,7 +31,7 @@ class Crawler:
                 category_id = self.get_category_id(script_data)
                 category_name =  category_url.split("/")[-1]
 
-                logging.info(f"{"#" * 20} {category_name} {"#" * 20}")
+                logging.info(f"{"#" * 20} {category_url} {"#" * 20}")
 
                 page_number = 1
     

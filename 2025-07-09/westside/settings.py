@@ -43,4 +43,19 @@ MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
 file_name = "2025-07-09/westside/westside.csv"
 
 
-FILE_HEADERS = []
+FILE_HEADERS = [
+    "pdp_url",
+    "product_name",
+    "regular_price",
+    "brand",
+    "country_of_origin",
+    "description",
+    "care_instructions",
+    "material_composition",
+    "clothing_fit",
+    "images",           
+    "color",            
+    "breadcrumb",
+    "sku",
+    "size"             
+]
