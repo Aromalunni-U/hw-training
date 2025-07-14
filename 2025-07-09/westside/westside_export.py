@@ -26,10 +26,13 @@ class Export:
             material_composition = item.get("material_composition", "")
             clothing_fit = item.get("clothing_fit", "")
             images = item.get("images", "")     
-            color = item.get("color", "")        
+            color = item.get("color", [])        
             breadcrumb = item.get("breadcrumb", "")
             sku = item.get("sku", "")
-            size = item.get("size", "") 
+            size = item.get("size", [])
+
+            color = color if color else "" 
+            size = size if size else ""
 
 
             data = [
