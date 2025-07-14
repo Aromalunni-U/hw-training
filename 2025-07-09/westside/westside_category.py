@@ -25,7 +25,6 @@ class Category:
                     CategoryItem(url = category_url).save()
                 except:
                     pass        
-
         else:
             logging.info(f"Status code : {response.status_code}")
 

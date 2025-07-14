@@ -33,6 +33,7 @@ class Parser:
         PRODUCT_NAME_XPATH = '//div[@class="product__title"]/h1/text()'
         REGULAR_PRICE_XPATH = '//span[@class="price-item price-item--regular"]/text()'
         BRAND_XPATH = '//div[@class="pdptitle"]/p/text()'
+        NET_QUANTITY_XPATH = '//b[contains(text(), "Net Quantity")]/following-sibling::text()'
         COUNTRY_XPATH = '//b[contains(text(), "Country Of Origin")]/following-sibling::text()'
         PRODUCT_DESCRIPTION_XPATH = '//div[@class="features_discription"][normalize-space()]/p/text()'
         CARE_INSTRUCTION_XPATH = '//b[contains(text(), "Care Instruction")]/following-sibling::text()'
@@ -47,6 +48,7 @@ class Parser:
         product_name = sel.xpath(PRODUCT_NAME_XPATH).get()
         regular_price = sel.xpath(REGULAR_PRICE_XPATH).get()
         brand = sel.xpath(BRAND_XPATH).get()
+        net_quantity = sel.xpath(NET_QUANTITY_XPATH).get()
         country_of_origin = sel.xpath(COUNTRY_XPATH).get()
         description = sel.xpath(PRODUCT_DESCRIPTION_XPATH).get()
         care_instructions = sel.xpath(CARE_INSTRUCTION_XPATH).get()
@@ -60,6 +62,7 @@ class Parser:
 
         regular_price = regular_price.replace("₹", "").strip() if regular_price else ""
         brand = brand.strip() if brand else ""
+        net_quantity = net_quantity.strip() if net_quantity else ""
         country_of_origin = country_of_origin.strip() if country_of_origin else ""
         description = description.strip() if description else ""
         care_instructions = care_instructions.strip() if care_instructions else ""
@@ -76,6 +79,7 @@ class Parser:
         item["product_name"] = product_name
         item["regular_price"] = regular_price
         item["brand"] = brand 
+        item["net_quantity"] = net_quantity
         item["country_of_origin"] = country_of_origin
         item["product_description"] = description
         item["care_instructions"] = care_instructions

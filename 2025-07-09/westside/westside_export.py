@@ -19,6 +19,7 @@ class Export:
             product_name = item.get("product_name", "")
             regular_price = item.get("regular_price", "")
             brand = item.get("brand", "")
+            net_quantity = item.get("net_quantity", "")
             country_of_origin = item.get("country_of_origin", "")
             description = item.get("description", "")
             care_instructions = item.get("care_instructions", "")
@@ -36,6 +37,7 @@ class Export:
                 product_name,
                 regular_price,
                 brand,
+                net_quantity,
                 country_of_origin,
                 description,
                 care_instructions,

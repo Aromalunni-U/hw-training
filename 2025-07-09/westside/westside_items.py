@@ -9,6 +9,7 @@ class ProductItem(DynamicDocument):
     product_name = StringField()
     regular_price = FloatField()
     brand = StringField()
+    net_quantity = StringField()
     country_of_origin = StringField()
     description = StringField()
     care_instructions = StringField()

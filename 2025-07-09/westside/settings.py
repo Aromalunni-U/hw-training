@@ -48,6 +48,7 @@ FILE_HEADERS = [
     "product_name",
     "regular_price",
     "brand",
+    "net_quantity",
     "country_of_origin",
     "description",
     "care_instructions",
