@@ -32,20 +32,24 @@ class Parser:
 
         PRODUCT_NAME_XPATH = "//h1[@class='pdp-info_name']/text()"
         REGULAR_PRICE_XPATH = 'concat(//span[@class="price-value "]/text(), //span[@class="price-value "]/@data-decimals)'
+        PRICE_WAS_XPATH = '//span[@class="price-original-value"]/s/text()'
+        PERCENTAGE_DISCOUNT_XPATH = '//em[@class="pdp-info_sticker"]/text()'
         PRODUCT_DESCRIPTION = "//div[@id='product-description']/p/text()"
         BREADCRUMB_XPATH = "//a[@class='breadcrumb__label is--link']/span/text()"
-        RATING_XPATH = "//span[@class='rating_label']/text()"
-        REVIEW_XPATH = "//span[@class='rating_label']/@data-count"
+        RATING_XPATH = "//p[@class='pdp-info_top']//span[@class='rating_label']/text()"
+        REVIEW_XPATH = "//p[@class='pdp-info_top']//span[@class='rating_label']/@data-count"
         IMAGE_XPATH = "//figure[@class='a-image image-contain pdp-info_image']/img/@src"
-        ALCHOLE_PER_XPATH = "//td[text()='Alcoholpercentage']/following-sibling::td/text()"
+        ALCHOLE_PER_XPATH = '//p[@class="pdp-info_desc"]/i[contains(text(), "%")]/text()'
         INGREDIENT_XPATH = "//td[text()='Ingrediënten']/following-sibling::td/text()"
         ALLERGENS_XPATH = "//td[text()='Allergie-informatie']/following-sibling::td/text()"
-        ALCHOLE_VOL_XPATH = "//td[text()='Inhoud']/following-sibling::td/text()"
+        ALCHOLE_VOL_XPATH = '//p[@class="pdp-info_desc"]/i[not(contains(text(), "%"))]/text()'
         INSTOCK_XPATH = '//div[contains(@class, "product-online-availability")]/text()'
         NUTRITIONS_XPATH = '//div[@class="product-nutritional-values"]//tr[not(@class="product-nutritional-serving")]'
 
         product_name = sel.xpath(PRODUCT_NAME_XPATH).get()
         regular_price = sel.xpath(REGULAR_PRICE_XPATH).get()
+        price_was = sel.xpath(PRICE_WAS_XPATH).get()
+        percentage_discount = sel.xpath(PERCENTAGE_DISCOUNT_XPATH).get()
         product_description = sel.xpath(PRODUCT_DESCRIPTION).get()
         breadcrumb = sel.xpath(BREADCRUMB_XPATH).getall()
         rating = sel.xpath(RATING_XPATH).get()
@@ -56,23 +60,35 @@ class Parser:
         allergens = sel.xpath(ALLERGENS_XPATH).get()
         alchol_by_volume = sel.xpath(ALCHOLE_VOL_XPATH).get()
         instock = sel.xpath(INSTOCK_XPATH).get()
-        
-
-        instock = True if instock == "Online op voorraad" else False
 
         nutritions  = {}
         table_rows = sel.xpath(NUTRITIONS_XPATH)
         for row in table_rows:
             key = row.xpath('./td[1]/text()').get()
             value = row.xpath('./td[2]/text()').get()
-            nutritions[key] = value
+            nutritions[key] = value.strip()
+        
+        regular_price = regular_price.strip() if regular_price else ""
+        price_was = price_was.strip() if price_was and price_was != regular_price else None
+        percentage_discount = percentage_discount.replace("-", "") if percentage_discount else ""
+        breadcrumb = " > ".join(breadcrumb) if breadcrumb else ""
+        rating = rating.strip() if rating else ""
+        review = review.strip() if review else ""
+        image = image.split("?")[0] if image else ""
+        ingredient = " ".join(ingredient.replace("\\n","").split()) if ingredient else ""
+        allergens = allergens.strip() if allergens else ""
+        instock = True if instock == "Online op voorraad" else False
+        nutritions = str(nutritions) if nutritions else ""
+
 
         item = {}
 
         item["pdp_url"] = link
         item["product_name"] = product_name
-        item["product_description"] = product_description
         item["regular_price"] = regular_price
+        item["price_was"] = price_was
+        item["percentage_discount"] = percentage_discount
+        item["product_description"] = product_description
         item["breadcrumb"] = breadcrumb
         item["rating"] = rating
         item["review"] = review
@@ -82,6 +98,7 @@ class Parser:
         item["allergens"] = allergens
         item["alchol_by_volume"] = alchol_by_volume
         item["instock"] = instock
+        item["nutritions"] = nutritions
 
         logging.info(item)
 
@@ -89,7 +106,6 @@ class Parser:
             ProductItem(**item).save()
         except:
             pass
-
 
 
 if __name__ == "__main__":
