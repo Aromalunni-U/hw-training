@@ -7,6 +7,7 @@ logging.basicConfig(
     datefmt='%H:%M:%S'
 )
 
+BASE_URL = "https://www.lidl.nl/"
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0',
@@ -21,3 +22,33 @@ HEADERS = {
     'Priority': 'u=0, i',
 }
 
+
+PROJECT_NAME = "lidil"
+
+MONGO_URI = "mongodb://localhost:27017/"  
+DB_NAME = "lidil"
+PARSE_COLLECTION = "parser"
+CRAWLER_COLLECTION = "crawler"
+MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
+MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
+
+file_name = "2025-07-17/lidil/lidil.csv"
+
+
+FILE_HEADERS = [
+    "pdp_url",
+    "product_name",
+    "price_was",
+    "percentage_discount",
+    "selling_price",
+    "images",
+    "review",
+    "rating",
+    "breadcrumb",
+    "brand",
+    "size",
+    "color",
+    "material",
+    "care_instructions",
+    "properties"
+]
