@@ -23,16 +23,16 @@ HEADERS = {
 }
 
 
-PROJECT_NAME = "lidil"
+PROJECT_NAME = "lidl"
 
 MONGO_URI = "mongodb://localhost:27017/"  
-DB_NAME = "lidil"
+DB_NAME = "lidl"
 PARSE_COLLECTION = "parser"
 CRAWLER_COLLECTION = "crawler"
 MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
 MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
 
-file_name = "2025-07-17/lidil/lidil.csv"
+file_name = "2025-07-17/lidl/lidl.csv"
 
 
 FILE_HEADERS = [
