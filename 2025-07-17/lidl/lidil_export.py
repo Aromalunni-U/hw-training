@@ -25,11 +25,15 @@ class Export:
             rating = item.get("rating", "")
             breadcrumb = item.get("breadcrumb", "")
             brand = item.get("brand", "")
-            size = item.get("size", "")
-            color = item.get("color" ,"")
-            material = item.get("material", "")
+            size = item.get("size", [])
             care_instructions = item.get("care_instructions", "")
             properties = item.get("properties", "")
+            features = item.get("features", {})
+
+
+            price_was = "" if price_was == 0.0 else price_was
+            size = size if size else ""
+            features = features if features else ""
 
             data = [
                  url,
@@ -43,10 +47,9 @@ class Export:
                  breadcrumb,
                  brand,
                  size,
-                 color,
-                 material,
                  care_instructions,
-                 properties
+                 properties,
+                 features
             ]
             self.writer.writerow(data)
 

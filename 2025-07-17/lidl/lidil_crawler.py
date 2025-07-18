@@ -20,35 +20,41 @@ class Crawler:
     def start(self):
         for category_url in self.category_collection.find():
             link = category_url.get("url","")
-            logging.info(f"{"#" * 20} {link} {"#" * 20}")
+            logging.info(f"{'#' * 20} {link} {'#' * 20}")
 
             offset = 0
             while True:
 
                 url = f"{link}?offset={offset}"
                 response = requests.get(url, headers = HEADERS)
+                if response.status_code == 200:
 
-                sel = Selector(response.text)
-                data = sel.xpath('//script[@type="application/json"]/text()').get()
+                    sel = Selector(response.text)
+                    data = sel.xpath('//script[@type="application/json"]/text()').get()
 
-                if data:
-                    pdp_urls = re.findall(r'\/p\/[a-zA-Z0-9\-/]+', data)
-                    pdp_urls = [f"https://www.lidl.nl{url}" for url in pdp_urls]
+                    if data:
+                        pdp_urls = re.findall(r'\/p\/[a-zA-Z0-9\-/]+', data)
+                        pdp_urls = [f"https://www.lidl.nl{url}" for url in pdp_urls]
 
-                    for url in pdp_urls:
-                        logging.info(url)
+                        if not pdp_urls:
+                            break
+                        
+                        for url in pdp_urls:
+                            logging.info(url)
 
-                        try:
-                            ProductUrlItem(url=url).save()
-                        except:
-                            pass
+                            try:
+                                ProductUrlItem(url=url).save()
+                            except:
+                                pass
 
-                    if not pdp_urls:
+                    else:
                         break
-                else:
-                    break
 
-                offset += 48
+                    offset += 48
+                else:
+                    logging.error(f"Status code : {response.status_code}")
+                    FailedItem(url = link, source = "crawler").save()
+                    break
 
 
 if __name__ == "__main__":

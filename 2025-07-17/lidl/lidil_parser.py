@@ -21,6 +21,10 @@ class Parser:
         for link in links:
             link = link.get("url","")
 
+            if self.parser_collection.find_one({"pdp_url": link}):
+                logging.info(f"Skipping already parsed URL: {link}")
+                continue
+
             response = requests.get(link,headers=HEADERS)
             if response.status_code == 200:
                 self.parse_item(link,response)
@@ -39,13 +43,12 @@ class Parser:
         REVIEW_XPATH = '//span[@class="ods-rating__info-total"]/text()'
         RATING_XPATH = '//span[@class="ods-rating__info"]/text()'
         BREADCRUMB_XPATH = '//span[@class="ods-breadcrumbs__link-title"]/text()'
-        MATERIAL_XPATH = "//p[strong[contains(text(), 'Materiaal')]]/following-sibling::*[1]//text()"
         CARE_INSTRUCTIONS = "//p[strong[contains(text(), 'Onderhoudsinstructies')]]/following-sibling::*[1]//text()"
         BRAND_XPATH = '//a[@class="heading__brand"]/text()'
         PROPERTIES_XPATH = "//p[strong[contains(text(), 'Eigenschappen')]]/following-sibling::ul/li/text()"
-        SIZE_XPATH = '//ul[@class="attributes-one__options"]//label[@class="option"]/text()'
+        SIZE_XPATH =     '//fieldset[.//span[@class="attribute-label__name" and text()="maten:"]]//ul[contains(@class,"attributes-one__options")]//label/text()'
         SCRIPT_DATA_XPATH = '//script[@id="__NUXT_DATA__"]/text()'
-        COLOR_XPATH = '//p[strong[contains(text(), "Kleuren")]]/text()[1]'
+        COLOR_XPATH = '//p[strong[contains(text(), "Kleuren") or contains(text(), "Kleur")]]/text()[1]'
 
 
         product_name = sel.xpath(PRODUCT_NAME_XPATH).get()
@@ -68,20 +71,33 @@ class Parser:
         sel = Selector(text=decoded_data)
 
         color = sel.xpath(COLOR_XPATH).get()
-        material = sel.xpath(MATERIAL_XPATH).getall()
         care_instructions = sel.xpath(CARE_INSTRUCTIONS).getall()
         properties = sel.xpath(PROPERTIES_XPATH).getall()
-
+    
         features = {}
         for row in sel.xpath('//table//tr'):
             key = row.xpath('./td[1]//strong/text()').get()
             value = row.xpath('./td[2]//text()').get()
             if key and value:
                 features[key.strip().rstrip(':')] = value.strip()
-
-        percentage_discount = percentage_discount.replace("-","").strip() if percentage_discount else ""
+                
+        price_was = f"{float(price_was.strip().replace('-', '')):.2f}" if price_was and price_was.strip() else "0.00"
+        percentage_discount = percentage_discount.replace('-','').strip() if percentage_discount else ""
+        selling_price = f"{float(selling_price.replace('-','')):.2f}" 
+        review = review.replace("(","").replace(")","") if review else ""
+        rating = rating.replace("/5","") if rating else ""
         breadcrumb = " > ".join(breadcrumb) if breadcrumb else ""
         brand = brand.strip() if brand else ""
+
+        if size:
+            size = [s.strip() for s in size]
+            size = list(set(size))
+        else:
+            size = []
+
+        color = color.replace(";",",") if color else "" 
+        care_instructions = ", ".join(care_instructions) if care_instructions else ""
+        properties = ", ".join(properties) if properties else ""
 
 
         item = {}
@@ -98,13 +114,16 @@ class Parser:
         item["brand"] = brand
         item["size"] = size
         item["color"] = color
-        item["material"] = material
         item["care_instructions"] = care_instructions
         item["properties"] = properties
+        item["features"] = features
 
         logging.info(item)
 
-      
+        try:
+            ProductItem(**item).save()
+        except:
+            pass
 
 if __name__ == "__main__":
     parser = Parser()

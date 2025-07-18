@@ -47,8 +47,7 @@ FILE_HEADERS = [
     "breadcrumb",
     "brand",
     "size",
-    "color",
-    "material",
     "care_instructions",
-    "properties"
+    "properties",
+    "features"
 ]

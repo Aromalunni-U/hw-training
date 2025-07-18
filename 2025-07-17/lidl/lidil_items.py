@@ -3,24 +3,25 @@ from settings import (
     PARSE_COLLECTION, MONGO_COLLECTION_URL_FAILED, MONGO_COLLECTION_CATEGORY, CRAWLER_COLLECTION
 )
 
+
 class ProductItem(DynamicDocument):
     meta = {"db_alias": "default", "collection": PARSE_COLLECTION}
 
     pdp_url = StringField(required=True, unique=True)
     product_name = StringField()
-    price_was = StringField()
+    price_was = FloatField()
     percentage_discount = StringField()
-    selling_price = StringField()
-    images = ListField(StringField())
+    selling_price = FloatField()
+    images = ListField()
     review = StringField()
     rating = StringField()
     breadcrumb = StringField()
     brand = StringField()
-    size = StringField()
+    size = ListField()
     color = StringField()
-    material = StringField()
     care_instructions = StringField()
-    properties = DictField()
+    properties = StringField()
+    features = DictField()
 
 
 class FailedItem(DynamicDocument):
