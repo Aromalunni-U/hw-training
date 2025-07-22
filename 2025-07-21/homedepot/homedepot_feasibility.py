@@ -10,7 +10,7 @@ category_url = "https://www.homedepot.com/b/Cleaning-Laundry-Supplies/N-5yc1vZcb
 page = 0
 
 while True:
-    url = f"{category_url}&Nao={page}"
+    url = f"{category_url}?Nao={page}"
 
     response = requests.get(url, headers= HEADERS)
     sel = Selector(response.text)

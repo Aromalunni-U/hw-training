@@ -35,4 +35,18 @@ MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
 file_name = "2025-07-21/homedepot/homedepot.csv"
 
 
-FILE_HEADERS = []
+FILE_HEADERS = [
+    "pdp_url",
+    "product_name",
+    "brand",
+    "breadcrumb",
+    "retail_limit",
+    "currency",
+    "selling_price",
+    "price_was",
+    "images",
+    "rating",
+    "review",
+    "product_description",
+    "product_details"
+]

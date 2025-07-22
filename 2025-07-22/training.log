@@ -1,0 +1,32 @@
+WEBSITE URL : https://www.homerealestate.com/
+
+
+- Meeting was conducted
+
+- Scraped data sampl data from homerealestate
+    fields = 
+         title  
+         office_name  
+         address  
+         city  
+         state  
+         zipcode  
+         profile_url  
+         languages  
+         description  
+         first_name  
+         middle_name  
+         last_name  
+         website  
+         email  
+         image_url  
+         agent_phone_numbers  
+         office_phone_numbers  
+         social  
+         country  
+
+        Requirements:
+        1. to extract 200 sample data
+        2. data format : JSON
+        3. fields : mentioned above
+        4. additional information : Need to extract agent details
