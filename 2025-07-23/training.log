@@ -1,0 +1,21 @@
+WEBSITE :https://www.maxfashion.com/
+
+- Tried to scrap 50 sample data from it using Webscraper.
+- Meeeting was conducted.
+
+REQUIREMENTS
+
+    category : kids
+
+    fields to extract:
+    url
+    product name
+    selling price
+    regular price
+    breadcrumbs
+    promotion description
+    image
+    product description
+
+    data format : CSV
+    data count required: 50 items
