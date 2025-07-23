@@ -29,6 +29,8 @@ class Export:
             product_description = item.get("product_description", "")
             product_details = item.get("product_details", "")
 
+            price_was = price_was if price_was != 0.0 else ""
+
             data = [
                  url,
                  product_name,

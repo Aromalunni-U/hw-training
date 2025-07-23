@@ -29,6 +29,7 @@ class Parser:
                 product_item.save()
     
     def parse_item(self,link, response):
+        logging.info(link)
         sel = Selector(response.text)
 
 
@@ -54,8 +55,6 @@ class Parser:
         price_was = offers.get("priceSpecification", {}).get("price", "")
         selling_price = offers.get("price", "")
 
-
-
         # product details
         start = details_script.find('{')
         end = details_script.rfind('}') + 1
@@ -80,7 +79,7 @@ class Parser:
         review = str(review).strip() if review else ""
         product_description = product_description.strip() if product_description else ""
         currency = currency.strip() if currency else ""
-        price_was = price_was.strip() if price_was else "0.00"
+        price_was = str(price_was).strip() if price_was else "0.00"
 
         
         item = {}

@@ -1,12 +1,10 @@
 import requests
 import logging
-from homedepot_items import  FailedItem, ProductUrlItem
+from homedepot_items import  ProductUrlItem
 from mongoengine import connect
-from pymongo import MongoClient
-from parsel import Selector
-from settings import HEADERS, DB_NAME, MONGO_URI, CRAWLER_COLLECTION
+from settings import headers, DB_NAME, MONGO_URI
 import json
-
+import time
 
 
 class Crawler:
@@ -14,51 +12,82 @@ class Crawler:
         connect(DB_NAME, host=MONGO_URI, alias="default")
     
     def start(self):
-        CATEGORY_URL = "https://www.homedepot.com/b/Cleaning/N-5yc1vZbqsi?catStyle=ShowProducts"
-        CATEGORY_URL = "https://www.homedepot.com/b/Cleaning-Cleaning-Products/Pick-Up-Today/N-5yc1vZcb33Z1z175a5"
 
-        page = 0
+        api_url = "https://apionline.homedepot.com/federation-gateway/graphql?opname=searchModel"
+
+        start_index = 0
+        page_size = 48  
 
         while True:
-            url = f"{CATEGORY_URL}&Nao={page}"
+            payload = {
+                "operationName": "searchModel",
+                "variables": {
+                    "navParam": "N-5yc1vZbqsi",
+                    "storeId": "1710",
+                    "channel": "DESKTOP",
+                    "orderBy": {
+                        "field": "TOP_SELLERS",
+                        "order": "ASC"
+                    },
+                    "startIndex": start_index,
+                    "pageSize": page_size,
+                    "additionalSearchParams": {
+                        "deliveryZip": "96913"
+                    }
+                },
+                "query": """
+                    query searchModel(
+                        $storeId: String, $startIndex: Int, $pageSize: Int,
+                        $orderBy: ProductSort, $navParam: String, $channel: Channel,
+                        $additionalSearchParams: AdditionalParams
+                    ) {
+                        searchModel(
+                            storeId: $storeId
+                            navParam: $navParam
+                            channel: $channel
+                            additionalSearchParams: $additionalSearchParams
+                        ) {
+                            products(startIndex: $startIndex, pageSize: $pageSize, orderBy: $orderBy) {
+                                identifiers {
+                                    productLabel
+                                    modelNumber
+                                    canonicalUrl
+                                    brandName
+                                }
+                            }
+                        }
+                    }
+                """
+            }
 
-            response = requests.get(url, headers= HEADERS)
-
+            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+            
             if response.status_code == 200:
-                sel = Selector(response.text)
+                data = response.json()
 
-                pdp_links = sel.xpath('//div[@data-testid="product-pod"]/a/@href').getall()
-                pdp_links = [f"https://www.homedepot.com{link}" for link in pdp_links]
-
-                json_text = sel.xpath('//script[@id="thd-helmet__script--browseSearchStructuredData"]/text()').get()
-                if not json_text:
-                    break
-                data = json.loads(json_text)
-
-                for block in data:
-                    entity = block.get("mainEntity")
-                    if entity and "offers" in entity:
-                        offers = entity["offers"]
-                        products = offers.get("itemOffered", [])
-                        for item in products:
-                            offer = item.get("offers")
-                            if offer and "url" in offer:
-                                pdp_links.append(offer["url"])
-
-                if not pdp_links:
+                try:
+                    products = data.get("data", {}).get("searchModel", {}).get("products", [])
+                except:
                     break
 
-                for url in pdp_links:
+                if not products:
+                    break
+
+                for product in products:
+                    url = product.get("identifiers", {}).get("canonicalUrl", "")
+                    url = f"https://www.homedepot.com{url}"
                     logging.info(url)
+
                     try:
-                        ProductUrlItem(url=url).save()
+                        ProductUrlItem(url = url).save()
                     except:
                         pass
-        
-                page += 24
+                
+                start_index += page_size
+                time.sleep(0.5)
             else:
                 logging.error(f"Status code {response.status_code}")
-                FailedItem(url = url, source = "crawler").save()
+                break
 
 
 if __name__ == "__main__":
