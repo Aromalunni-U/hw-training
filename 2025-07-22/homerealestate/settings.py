@@ -41,3 +41,5 @@ headers = {
 MONGO_URI = "mongodb://localhost:27017/"  
 DB_NAME = "homerealestate"
 DATA_COLLECTION = "parser"
+
+file_name = "2025-07-22/homerealestate/homerealestate.json"

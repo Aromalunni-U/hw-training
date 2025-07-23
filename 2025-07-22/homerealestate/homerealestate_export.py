@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import json
-from settings import MONGO_URI, DB_NAME, DATA_COLLECTION
+from settings import MONGO_URI, DB_NAME, DATA_COLLECTION, file_name
 
 
 class Export:
@@ -20,7 +20,7 @@ class Export:
             middle_name = ""
             last_name = ""
 
-            if "&" not in name:
+            if "&" not in name and "and" not in name:
                 full_name = name.strip().split()
                 if len(full_name) == 2:
                     first_name = full_name[0]
@@ -30,6 +30,8 @@ class Export:
                     first_name = full_name[0]
                     middle_name = full_name[1]
                     last_name = full_name[2]
+                else:
+                    first_name = name.strip()
             else:
                 first_name = name.strip()
 
@@ -48,8 +50,10 @@ class Export:
                 del doc["name"]
             
 
-        with open("homerealestate.json", "w", encoding="utf-8") as f:
-            json.dump(documents, f, indent=2, ensure_ascii=False)
+        with open(file_name, "w", encoding="utf-8") as file:
+            for doc in documents:
+                json.dump(doc, file, ensure_ascii=False)
+                file.write("\n")
             
 if __name__ == "__main__":
     export = Export()

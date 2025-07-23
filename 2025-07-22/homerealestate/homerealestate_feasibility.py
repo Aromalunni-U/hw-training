@@ -53,7 +53,6 @@ class Crawler:
             office_phone_numbers  = article.xpath(".//a[i[contains(@class, 'rni-company')]]/@href").get()
             agent_phone_numbers = article.xpath(".//a[i[contains(@class,'rni-profile')]]/@href").get()
             city = article.xpath(".//span[@class='js-sort-city']/text()").get()
-            email = article.xpath(".//a[i[contains(@class,'rni-mail')]]/@href").get()
             website = article.xpath(".//a[i[contains(@class,'rni-website')]]/@href").get()
             full_address = article.xpath(".//p[span[@class='js-sort-city']]//text()[normalize-space()]").getall()
             title = article.xpath(".//span[@class='account-title']/text()").get()
@@ -69,27 +68,45 @@ class Crawler:
             city = city.strip() if city else ""
             agent_phone_numbers = agent_phone_numbers.replace("tel:","") if agent_phone_numbers else ""
             office_phone_numbers = office_phone_numbers.replace("tel:","") if office_phone_numbers else ""
+            website = website if website else ""
             title = title.strip() if title else ""
 
             social = ""
             description = ""
+            email = ""
 
             if profile_url:
                 response = scraper.get(profile_url, headers=headers)
                 sel = Selector(response.text)
 
-                FACEBOOK_XPATH = '//a[@aria-label="Facebook"]/@href'
-                INSTAGRAM_XPATH = '//a[@aria-label="Instagram"]/@href'
-                DESCRIPTION_XPATH = '//div[@id="bioAccountContentDesc"]//p/text()'
+                FACEBOOK_XPATH = '//ul[contains(@class,"rng-agent")]//a[@aria-label="Facebook"]/@href'
+                INSTAGRAM_XPATH = '//ul[contains(@class,"rng-agent")]//a[@aria-label="Instagram"]/@href'
+                LINKEDIN_XPATH = '//ul[contains(@class,"rng-agent")]//a[@aria-label="linkedin"]/@href'
+                DESCRIPTION_XPATH = '''
+                    //div[contains(@id, "body-text-1-preview")]//p/text()
+                    | //div[contains(@id, "body-text-1-preview")]/text()
+                '''
 
                 facebook = sel.xpath(FACEBOOK_XPATH).get()
                 instagram = sel.xpath(INSTAGRAM_XPATH).get()
+                linkedin = sel.xpath(LINKEDIN_XPATH).get()
                 description = sel.xpath(DESCRIPTION_XPATH).getall()
-                description = " ".join(description) if description else ""
 
-                social = {}
-                social["facebook"] = facebook
-                social["instagram"] = instagram
+                facebook = facebook if facebook else ""
+                instagram = instagram if instagram else ""
+                linkedin = linkedin if linkedin else ""
+                description = " ".join(description) if description else ""
+                description = description.replace("\r", "").replace("\n", "")
+
+                
+                if facebook or linkedin or instagram:
+                    social = {}
+
+                    social["facebook"] = facebook
+                    social["instagram"] = instagram
+                    social["linkedin"] = linkedin
+                else:
+                     social = ""
 
 
             item = {}
