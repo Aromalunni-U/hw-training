@@ -54,17 +54,23 @@ if res.status_code == 200:
 
     PRODUCT_NAME  = '//span[@data-testid="product_title"]/text()'
     BRAND_XPATH = '//span[@data-testid="product_brand"]/text()'
+    PRICE_XPARTH = '//p[@data-testid="product_price_current"]/text()'
+    PRICE_WAS_XPATH = '//p[@data-testid="product_price_previous"]/text()'
     REVIEW_XPATH = '//a[@data-testid="rating-and-reviews-summary_rating__review"]/text()'
     RATING_XPATH = '//span[contains(text(), "out of 5 stars")]/text()'
     IMAGE_XPATH = '//picture/img/@src'
     PRODUCT_DESCRIPTION_XPATH = '//div[@data-testid="product_description_body"]/text()'
     EAN_XPATH = '//p[@data-testid="product_description_ean"]/text()'
+    SIZE_XPATH = '//label[contains(@for, "size")]/span/text()'
+
 
     product_name =  sel.xpath(PRODUCT_NAME).get()
     brand = sel.xpath(BRAND_XPATH).get()
+    selling_price = sel.xpath(PRICE_XPARTH).get()
+    price_was = sel.xpath(PRICE_WAS_XPATH).get()
     review = sel.xpath(REVIEW_XPATH).get()
     rating = sel.xpath(RATING_XPATH).get()
     image = sel.xpath(IMAGE_XPATH).getall()
     product_description = sel.xpath(PRODUCT_DESCRIPTION_XPATH).get()
     ean = sel.xpath(EAN_XPATH).get()
-
+    size = sel.xpath(SIZE_XPATH).getall()
