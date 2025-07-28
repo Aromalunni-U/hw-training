@@ -14,7 +14,7 @@ class Export:
         self.writer.writerow(FILE_HEADERS)
         logging.info(FILE_HEADERS)
 
-        for item in db[DATA_COLLECTION].find():
+        for item in db[DATA_COLLECTION].find().limit(200):
             url = item.get("pdp_url", "")
             product_id = item.get("product_id", "") 
             product_name = item.get("product_name", "") 
@@ -22,7 +22,7 @@ class Export:
             currency = item.get("currency", "") 
             selling_price = item.get("selling_price", "") 
             regular_price = item.get("regular_price", "") 
-            promotion_description = item.get("promotion_description", "") 
+            promotion_description = item.get("promotion_description", "").replace("Â", "")
             review = item.get("review", "") 
             rating = item.get("rating", "") 
             image = item.get("image", "") 

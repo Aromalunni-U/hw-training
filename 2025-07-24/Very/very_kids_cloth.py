@@ -37,7 +37,7 @@ class Crawler:
                     break
 
                 for link in pdp_urls:
-                    response = requests.get(url = link, headers= HEADERS)
+                    response = requests.get(url = link, headers= HEADERS) 
 
                     if response.status_code == 200:
                         self.parse_item(response, link)
@@ -61,10 +61,12 @@ class Crawler:
         REVIEW_XPATH = '//a[@data-testid="rating-and-reviews-summary_rating__review"]/text()'
         RATING_XPATH = '//span[contains(text(), "out of 5 stars")]/text()'
         IMAGE_XPATH = '//picture/img/@src'
-        PRODUCT_DESCRIPTION_XPATH = '//strong[contains(text(), "Details")]/following-sibling::ul/li/text()'
+        PRODUCT_DESCRIPTION_XPATH = '//strong[contains(text(), "Details") or contains(text(), "Reasons to love")]/following-sibling::ul/li/text()'
         SIZE_XPATH = '//label[contains(@for, "size") or contains(@for, "years")]/span/text()'
         MATERIAL_CARE_XPATH = '//strong[contains(text(), "Material & Care")]/following-sibling::ul/li/text()'
         JSON_DATA_XPATH = '//script[@type="application/ld+json"]/text()'
+        PROMO_XPARTH = '//p[contains(@data-testid, "product_price_current")]/text()'
+
 
         try:
             json_data = sel.xpath(JSON_DATA_XPATH).get()
@@ -88,12 +90,15 @@ class Crawler:
             product_description = sel.xpath(PRODUCT_DESCRIPTION_XPATH).getall()
             size = sel.xpath(SIZE_XPATH).getall()
             material_care = sel.xpath(MATERIAL_CARE_XPATH).getall()
+            promotion_description_data = sel.xpath(PROMO_XPARTH).get()
 
             product_id = link.split("/")[-1].replace(".prd", "")
             regular_price = regular_price.replace("From ", "").replace("Â£", "") if regular_price else ""
-            promotion_description =  re.search(r'\((.*?)\)', selling_price)
+            promotion_description =  re.search(r'\((.*?)\)', promotion_description_data)
             promotion_description = promotion_description.group(1) if promotion_description else ""
-            product_description = ", ".join(product_description) if product_description else ""
+            promotion_description = promotion_description if "From" not in promotion_description else ""
+
+            product_description = ", ".join(product_description).split(", Material Content")[0] if product_description else ""
             material_care = material_care if material_care else ""
             review = review.replace(" reviews", "") if review else ""
             rating = rating.replace(" out of 5 stars", "") if rating else ""
