@@ -1,0 +1,12 @@
+WEBSITE URL : https://www.very.co.uk/ 
+WEBSITE URL : http://rvusa.com
+
+- Completed scraping very sample data.
+- Completed rvusa feasibility study.
+
+
+REQUIREMENTS:
+
+    category : farm equipment, construction equipment, trucking (trucks, rvs, and trailers), aircraft, and livestock industries .
+
+    fields : Price, description, specifications, images, location, contact info (name/phone/email).
