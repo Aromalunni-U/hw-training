@@ -1,0 +1,26 @@
+WEBSITE URL :https://www.homecentre.com
+
+
+- Completed scraping sample data from homecentre.
+
+REQUIREMENTS :
+
+
+    Category : https://www.homecentre.com/ae/en/c/furniture-sofaandseating
+
+    Fields : 
+        url
+        competitor_name 
+        product_id
+        product_name
+        product_color
+        material
+        details
+        specification
+        price
+        price_was
+        breadcrumb
+        stock
+        image
+
+    Data format : CSV - sample data
