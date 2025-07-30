@@ -2,18 +2,21 @@ import requests
 import logging
 from pymongo import MongoClient
 from settings import headers, DB_NAME, MONGO_URI, CRAWLER_COLLECTION
+from homecentre_items import ProductUrlItem
+from mongoengine import connect
 
 
 
 class Crawler:
     def __init__(self):
+        connect(DB_NAME, host=MONGO_URI, alias="default")
         self.client = MongoClient(MONGO_URI)
         self.collection = self.client[DB_NAME][CRAWLER_COLLECTION]
     
     def start(self):
         url = "https://3hwowx4270-1.algolianet.com/1/indexes/*/queries"
 
-        for page_no in range(5): 
+        for page_no in range(6): 
             payload = {
                 "requests": [
                     {
@@ -36,7 +39,11 @@ class Crawler:
                         if pdp_url:
                             pdp_url = f"https://www.homecentre.com/ae/en{pdp_url}"
                             logging.info(pdp_url)
-                            self.collection.insert_one({"url": pdp_url})
+
+                            try:
+                                ProductUrlItem(url = pdp_url).save()
+                            except:
+                                pass
 
             else:
                 logging.error(f"Status code : {response.status_code}")

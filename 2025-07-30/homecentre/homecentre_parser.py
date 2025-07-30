@@ -3,6 +3,7 @@ from mongoengine import connect
 import logging
 from parsel import Selector
 from pymongo import MongoClient
+from homecentre_items import ProductItem
 from settings import MONGO_URI, DB_NAME, HEADERS, CRAWLER_COLLECTION, PARSE_COLLECTION
 
 
@@ -34,8 +35,8 @@ class Parser:
         PRICE_XPATH = '//span[@itemprop="price"]/@content'
         PRICE_WAS_XPATH = '//del[@id="products-details-price-old-01"]/text()'
         STOCK_XPATH = '//strong[@id="product-stock"]/text()'
-        DETAILS_XPATH = '//p[@id="product-summary-v2"]//text()'
-        COLOR_XPATH = '//li[@id="colorItem0"]/input/@data-product-color'
+        DETAILS_XPATH =  '//div[@id="product-overview-v2"]/p//text()'
+        COLOR_XPATH = '//li[@id="colorItem0" or @id="filter-form-colo-item-0"]/input/@data-product-color'
         IMAGE_XPATH = '//span[@data-alt="image description"]/picture//img/@src'
         MATERIAL_XPATH = '//div[@class="attribute-group-v2"][.//p[contains(text(), "Material")]]//div[@class="row"]'
         SPEC_XPATH = '//div[@class="attribute-group-v2"][.//p[contains(text(), "Specifications")]]//div[@class="row"]'
@@ -91,7 +92,10 @@ class Parser:
         item["image"] = image
 
         logging.info(item)
-
+        try:
+            ProductItem(**item).save()
+        except:
+            pass
 
 if __name__ == "__main__":
     parser = Parser()

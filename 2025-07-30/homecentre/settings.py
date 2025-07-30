@@ -49,3 +49,24 @@ PARSE_COLLECTION = "parser"
 CRAWLER_COLLECTION = "crawler"
 MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
 MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
+
+
+
+file_name = "2025-07-30/homecentre/homecentre.csv"
+
+
+FILE_HEADERS = [ 
+    "url",
+    "competitor_name",
+    "product_name",
+    "product_id",
+    "product_color",
+    "material",
+    "details",
+    "specification",
+    "price",
+    "price_was",
+    "breadcrumb",
+    "stock",
+    "image"
+]
