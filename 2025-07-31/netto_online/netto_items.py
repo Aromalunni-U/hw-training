@@ -9,6 +9,7 @@ class ProductItem(DynamicDocument):
 
     pdp_url = StringField(required=True, unique=True)
     product_name = StringField()
+    product_id = StringField()
     currency = StringField()
     selling_price = FloatField()
     price_was = FloatField()

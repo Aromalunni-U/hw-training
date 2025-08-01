@@ -36,4 +36,19 @@ MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
 
 file_name = "2025-07-31/netto_online/netto.csv"
 
-FILE_HEADERS = []
+FILE_HEADERS = [
+    "pdp_url",
+    "product_id",
+    "product_name",
+    "brand",
+    "selling_price",
+    "price_was",
+    "currency",
+    "rating",
+    "review",
+    "image",
+    "instock",
+    "breadcrumb",
+    "promotion_description",
+    "product_description"
+]

@@ -10,6 +10,7 @@ from settings import (
 )   
 
 
+
 class Crawler:
     def __init__(self):
         connect(DB_NAME, host=MONGO_URI, alias="default")
@@ -21,13 +22,9 @@ class Crawler:
             link = category_url.get("url","")
             logging.info(f"{'#' * 20} {link} {'#' * 20}")
 
-            page_no = 1
-
             while True:
 
-                url = link if page_no == 1 else f"{link}/{page_no}"
-
-                response = requests.get(url=url, headers=HEADERS , impersonate="chrome")
+                response = requests.get(url=link, headers=HEADERS , impersonate="chrome")
                 if response.status_code == 200:
                     sel = Selector(response.text)
 
@@ -38,12 +35,17 @@ class Crawler:
 
                     for url in pdp_urls:
                         logging.info(url)
+
                         try:
                             ProductUrlItem(url = url).save()
                         except:
                             pass
-                    
-                    page_no +=1
+
+                    next_page = sel.xpath('//a[@title="Nächste Listenseite"]/@href').get()
+                    if not next_page:
+                        break
+
+                    link = next_page
 
                 else:
                     logging.error(f"Status code : {response.status_code}")
