@@ -1,0 +1,14 @@
+WEBSITE URL :https://auchan.hu/
+
+category - dairy products
+
+REQUIREMENTS :
+
+    unique_id
+    product_name
+    regular_price
+    selling_price
+    percentage_discount
+    breadcrumb
+    pdp_url
+    uom
