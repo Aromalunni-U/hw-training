@@ -57,5 +57,6 @@ FILE_HEADERS = [
     "grammage_unit",
     "product_description",
     "country_of_orgin",
-    "image"
+    "image",
+    "breadcrumb"
 ]

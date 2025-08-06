@@ -15,9 +15,13 @@ def parse_item(response, pdp_url):
     BRAND_XPATH = '//h1/a/p/text()'
     SELLING_PRICE_XPATH = '//span[@data-test="product-price"]/text()'
     GRAMMAGE_XPATH = '//span[@class="detailQuantity"]/text()'
-    PRODUCT_DESC_XPATH = '//div[@class="ckContent"]/div[not(@class="autoTranslationAnnouncement")]//text()'
+    PRODUCT_DESC_XPATH = '''
+        //div[@class="ckContent"]/div[not(@class="autoTranslationAnnouncement")]//p//text() |
+        //div[@class="ckContent"]/div[not(@class="autoTranslationAnnouncement")]//text()
+    '''
     IMAGE_XPATH = '//div[contains(@class, "sc-c31413-1")]//img/@src'
     COUNTRY_XPATH = '//span[@class="categoryName"]/text()'
+    BREADCRUMB_XPATH = '//ul[@data-test="pnlBreadcrumbs"]/li/a/text()'
 
     product_name = sel.xpath(PRODUCT_NAME_XPATH).get()
     brand = sel.xpath(BRAND_XPATH).get()
@@ -26,6 +30,7 @@ def parse_item(response, pdp_url):
     product_description = sel.xpath(PRODUCT_DESC_XPATH).getall()
     image = sel.xpath(IMAGE_XPATH).get()   
     country_of_orgin = sel.xpath(COUNTRY_XPATH).get()
+    breadcrumb = sel.xpath(BREADCRUMB_XPATH).getall()
 
     product_id = pdp_url.split("/")[-1].split("-")[0]
 
@@ -42,6 +47,11 @@ def parse_item(response, pdp_url):
     product_description = " ".join(product_description).replace("\n","").replace("\xa0", "") if product_description else ""
     product_description = product_description.strip() if product_description != "." else ""
 
+    image =  image.split("/https://")[-1]
+    image = f"https://{image}"
+
+    breadcrumb = " > ".join(breadcrumb)
+
 
     item = {}
 
@@ -55,6 +65,7 @@ def parse_item(response, pdp_url):
     item["product_description"] = product_description
     item["country_of_orgin"] = country_of_orgin
     item["image"] = image
+    item["breadcrumb"] = breadcrumb
 
     logging.info(item)
 
@@ -71,9 +82,14 @@ if response.status_code == 200:
     pdp_url = sel.xpath('//a[div[@data-test="productCard-body-price"]]/@href').getall()
     pdp_url = [f"https://www.knuspr.de{url}" for url in pdp_url]
 
+    count = 1
     for url in pdp_url:
-        response = requests.get(url=url, headers=HEADERS)
-        parse_item(response, url)
+        if count <= 10:
+            response = requests.get(url=url, headers=HEADERS)
+            parse_item(response, url)
+            count +=1
+        else:
+            break
 else:
     logging.error(f"Status code {response.status_code}")
 
