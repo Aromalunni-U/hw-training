@@ -3,6 +3,7 @@ import logging
 from settings import HEADERS, headers
 from parsel import Selector
 
+
 ################ CRAWLER ##################
 
 def crawler(product_id):
@@ -57,21 +58,39 @@ while True:
 ############### PARSER ####################3
 
 pdp_url = "https://www.knuspr.de/en-DE/25360-bauckhof-bio-waffeln-pfannkuchen-glutenfrei"
+pdp_url = "https://www.knuspr.de/en-DE/6509-alnatura-organic-chickpea-flour"
 
 response = requests.get(pdp_url, headers=HEADERS)
 if response.status_code == 200:
     sel = Selector(response.text)
 
-    product_name = sel.xpath('//h1/a/text()').get()
-    brand = sel.xpath('//h1/a/p/text()').get()
-    selling_price = sel.xpath('//span[@data-test="product-price"]/text()').get()
-    grammage= sel.xpath('//span[@class="detailQuantity"]/text()').get()
-    product_description = sel.xpath('//div[@class="ckContent"]/p/text()').getall()
-    image = sel.xpath('//div/picture/img/@src').get()   
+    PRODUCT_NAME_XPATH = '//h1/a/text()'
+    BRAND_XPATH = '//h1/a/p/text()'
+    SELLING_PRICE_XPATH = '//span[@data-test="product-price"]/text()'
+    GRAMMAGE_XPATH = '//span[@class="detailQuantity"]/text()'
+    PRODUCT_DESC_XPATH = '''
+        //div[@class="ckContent"]/div[not(@class="autoTranslationAnnouncement")]//p//text() |
+        //div[@class="ckContent"]/div[not(@class="autoTranslationAnnouncement")]//text()
+    '''
+    IMAGE_XPATH = '//div[contains(@class, "sc-c31413-1")]//img/@src'
+    COUNTRY_XPATH = '//span[@class="categoryName"]/text()'
+    BREADCRUMB_XPATH = '//ul[@data-test="pnlBreadcrumbs"]/li/a/text()'
+    NUTRITIONS_XPATH = '//div[h2[contains(text(),"Nutritional")]]//tr'
+    ALLERGENCE_XPATH = '//div[h2[contains(text(),"Allergens")]]//tr//text()'
+
+
+    product_name = sel.xpath(PRODUCT_NAME_XPATH).get()
+    brand = sel.xpath(BRAND_XPATH).get()
+    selling_price = sel.xpath(SELLING_PRICE_XPATH).get()
+    grammage= sel.xpath(GRAMMAGE_XPATH).get()
+    product_description = sel.xpath(PRODUCT_DESC_XPATH).getall()
+    image = sel.xpath(IMAGE_XPATH).get()   
+    country_of_orgin = sel.xpath(COUNTRY_XPATH).get()
+    breadcrumb = sel.xpath(BREADCRUMB_XPATH).getall()   
+    allergens = sel.xpath(ALLERGENCE_XPATH).getall()
+
 
     product_id = pdp_url.split("/")[-1].split("-")[0]
-
-
     brand = brand.strip() if brand else ""
     selling_price = selling_price.replace("€", "").strip() if selling_price else ""
 
@@ -83,5 +102,17 @@ if response.status_code == 200:
 
     product_description = " ".join(product_description) if product_description else ""
 
+    nutritions  = {}
+    table_rows = sel.xpath(NUTRITIONS_XPATH)
+    for row in table_rows:
+        key = row.xpath('./td[1]/text()').get()
+        value = row.xpath('./td[2]//text()').getall()
+        nutritions[key] = "".join(value).strip()
+
+    allergens = " ".join(allergens) if allergens else ""
+
+        
 else:
     logging.error(f"Status code {response.status_code}")
+
+
