@@ -13,7 +13,7 @@ class Category:
     def start(self):
         
         cookies = {
-        'datadome': '1~YZyQTI1fW9TJncY9NnIqrboYiuFA4R5wkf2AhJpBj38wDin6UyxI7EZyUUk3Qfu4jRDDJC4G48KGoM4BE9Mqr_O1tSGREzEwP7VfpsKCoGJusDdt2b6MIK5m0TNJZ7'
+        'datadome': '2mSnKqADcMbwDwWM3vW~uINMeP0cVG3X7FF5j8ZoQVzpfnJGMCXFc06a2QR4ZAl9C1WDV_MncZlsIw0VWSbO18w4skZobLB9UegmIOPNH_UqGbfC88nI_2T0O4bAp__K'
         }
 
         session = requests.Session()
@@ -23,8 +23,8 @@ class Category:
         if response.status_code == 200:
             sel = Selector(response.text)
 
-            category_urls = sel.xpath('//a[@data-page-type="product-list"]/@href').getall()
-            category_urls = [f"https://www.coop.ch{url}" for url in category_urls]
+            category_urls = sel.xpath('//a[@data-navigation-category-code]/@href').getall()
+            category_urls = [f"https://www.coop.ch{url}" for url in category_urls if "/c/" in url]
 
             for url in category_urls:
                 logging.info(url)
@@ -34,7 +34,6 @@ class Category:
                     pass 
         else:
             logging.error(f"Status code {response.status_code}")
-
 
 
 

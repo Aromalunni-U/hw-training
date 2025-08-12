@@ -20,6 +20,10 @@ headers = {
             'Priority': 'u=0, i',
         }
 
+cookies = {
+        'datadome': '2mSnKqADcMbwDwWM3vW~uINMeP0cVG3X7FF5j8ZoQVzpfnJGMCXFc06a2QR4ZAl9C1WDV_MncZlsIw0VWSbO18w4skZobLB9UegmIOPNH_UqGbfC88nI_2T0O4bAp__K'
+}
+
 
 BASE_URL = "https://www.coop.ch/de/"
 
@@ -32,6 +36,21 @@ CRAWLER_COLLECTION = "crawler"
 MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
 MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
 
-file_name = "2025-07-31/netto_online/netto.csv"
+file_name = "2025-08-11/Coop/coop.csv"
 
-FILE_HEADERS = []
+FILE_HEADERS = [
+    "pdp_url",
+    "product_name", 
+    "product_id" ,
+    "review",
+    "rating",
+    "breadcrumb", 
+    "brand",
+    "selling_price",
+    "regular_price",
+    "grammage_quantity",
+    "grammage_unit",
+    "percentage_discount",
+    "country_of_origin",
+    "image"
+]
