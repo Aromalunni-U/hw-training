@@ -21,7 +21,7 @@ headers = {
         }
 
 cookies = {
-        'datadome': '2mSnKqADcMbwDwWM3vW~uINMeP0cVG3X7FF5j8ZoQVzpfnJGMCXFc06a2QR4ZAl9C1WDV_MncZlsIw0VWSbO18w4skZobLB9UegmIOPNH_UqGbfC88nI_2T0O4bAp__K'
+    'datadome': 't03HjEy0Gy35xHNN~KbsgOKoqIvJQe4iL2ggZqntQ93~0WXmAFqzHglEsfznJge7NO9zR3_ml15H5MUtEv6JHRQbw6QsIIRwis0L4z2Kyoa~EYCjO9MMH9IWXy7BOZ7b'
 }
 
 
