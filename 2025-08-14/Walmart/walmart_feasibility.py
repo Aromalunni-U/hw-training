@@ -11,7 +11,6 @@ HEADERS = {
     'downlink': '2',
     'dpr': '1.25',
     'pragma': 'no-cache',
-    'referer': 'https://www.walmart.com/cp/electronics/3944',
     'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Linux"',
@@ -35,11 +34,6 @@ def nutrient_and_vitamin(data):
     return key, value    
 
 #################### CRAWLER ############################
-
-category_url = "https://www.walmart.com/shop/deals/flash-deals-electronics?povid=ETS_NA_NA_NA_ITEMCRS_FLDL_CP_3944_TechFlashDeals"
-
-page_no = 1
-
 
 
 page_no = 1
