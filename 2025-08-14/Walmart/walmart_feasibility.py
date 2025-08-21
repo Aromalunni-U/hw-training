@@ -36,46 +36,46 @@ def nutrient_and_vitamin(data):
 #################### CRAWLER ############################
 
 
-page_no = 1
-category_url = "https://www.walmart.com/shop/deals/flash-deals-electronics?povid=ETS_NA_NA_NA_ITEMCRS_FLDL_CP_3944_TechFlashDeals"
+# page_no = 1
+# category_url = "https://www.walmart.com/shop/deals/flash-deals-electronics?povid=ETS_NA_NA_NA_ITEMCRS_FLDL_CP_3944_TechFlashDeals"
 
-url_parts = urlparse(category_url).path.strip("/").split("/")
-url_parts = "&seo=".join(url_parts[1:])
+# url_parts = urlparse(category_url).path.strip("/").split("/")
+# url_parts = "&seo=".join(url_parts[1:])
 
-while True:
+# while True:
         
-    page_url = f"{category_url}&seo={url_parts}&page={page_no}&affinityOverride=default"
+#     page_url = f"{category_url}&seo={url_parts}&page={page_no}&affinityOverride=default"
     
-    response = requests.get(url=page_url, headers=HEADERS)
-    if response.status_code == 200:
+#     response = requests.get(url=page_url, headers=HEADERS)
+#     if response.status_code == 200:
 
-        sel = Selector(response.text)
-        json_ld = sel.xpath('//script[contains(text(),"OfferCatalog")]/text()').get()
+#         sel = Selector(response.text)
+#         json_ld = sel.xpath('//script[contains(text(),"OfferCatalog")]/text()').get()
 
-        if not json_ld:
-            break
+#         if not json_ld:
+#             break
 
-        try:
-            data = json.loads(json_ld)
-        except:
-            break
+#         try:
+#             data = json.loads(json_ld)
+#         except:
+#             break
 
-        products = data.get("itemListElement", [])
-        if not products:
-            break
+#         products = data.get("itemListElement", [])
+#         if not products:
+#             break
 
-        pdp_urls = [f"https://{p.get('url', '').lstrip('/')}" for p in products if p.get("url")]
-        for url in pdp_urls:
-            print(url)
-        page_no += 1
+#         pdp_urls = [f"https://{p.get('url', '').lstrip('/')}" for p in products if p.get("url")]
+#         for url in pdp_urls:
+#             print(url)
+#         page_no += 1
         
-    else:
-        print(f"Status code  {response.status_code}")
+#     else:
+#         print(f"Status code  {response.status_code}")
 
 ################ PARSER ###################
 
 
-url = "https://www.walmart.com/ip/Totino-s-Ultimate-Pizza-Extra-Cheese-Frozen-Pizza-Frozen-Snacks-10-69-oz/15205561102?adsRedirect=true"
+url = "https://www.walmart.com/ip/Totino-s-Ultimate-Pizza-Extra-Cheese-Frozen-Pizza-Frozen-Snacks-10-69-oz/15205561102"
 
 
 response = requests.get(url=url, headers=HEADERS)
