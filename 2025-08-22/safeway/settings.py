@@ -24,6 +24,7 @@ HEADERS = {
 }
 
 
+
 PROJECT_NAME = "safeway"
 
 MONGO_URI = "mongodb://localhost:27017/"  
@@ -35,4 +36,14 @@ MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
 
 file_name = "2025-08-22/safeway/safeway.csv"
 
-FILE_HEADERS = []
+FILE_HEADERS = [
+    "product_name",
+    "selling_price",
+    "regular_price",
+    "review",
+    "rating",
+    "warning",
+    "ingredient",
+    "instructionforuse",
+    "image"
+]

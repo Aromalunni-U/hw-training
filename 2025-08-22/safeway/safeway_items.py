@@ -9,10 +9,14 @@ class ProductItem(DynamicDocument):
 
     pdp_url = StringField(required=True, unique=True)
     product_name = StringField()
-    review = StringField()
-    rating = StringField()
     selling_price = FloatField()
     regular_price = FloatField()
+    review = StringField()
+    rating = StringField()
+    warning = StringField()
+    ingredient = StringField()
+    instructionforuse = StringField()
+    image = StringField()
     
 
 class FailedItem(DynamicDocument):
