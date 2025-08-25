@@ -1,4 +1,3 @@
-import re
 import logging
 import csv
 from settings import file_name,FILE_HEADERS, MONGO_URI, DB_NAME, PARSE_COLLECTION
@@ -28,6 +27,12 @@ class Export:
             ingredient = item.get("ingredient","")
             instructionforuse = item.get("instructionforuse", "")
             image = item.get("image","")
+            
+            regular_price = rf"{regular_price:.2f}" if regular_price != 0 else ""
+            selling_price = f"{selling_price:.2f}" if selling_price != 0 else ""
+            review = review if review != "0" else ""
+            rating = rating if rating != "0.0" else ""
+            
             
             data = [
                 url,
