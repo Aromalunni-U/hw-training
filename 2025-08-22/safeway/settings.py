@@ -37,6 +37,7 @@ MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
 file_name = "2025-08-22/safeway/safeway.csv"
 
 FILE_HEADERS = [
+    "pdp_url",
     "product_name",
     "selling_price",
     "regular_price",
