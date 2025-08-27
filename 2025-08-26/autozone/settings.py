@@ -8,7 +8,6 @@ logging.basicConfig(
 )
 
 
-BASE_URL = "https://www.safeway.com"
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0',
@@ -44,5 +43,3 @@ MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
 NO_MATCHED_COLLECTION = "no_matched_parts"
 
 file_name = "2025-08-26/autozone/autozone.csv"
-
-FILE_HEADERS = []
