@@ -8,7 +8,6 @@ from autozone_items import  FailedItem, ProductItem
 from settings import MONGO_URI, DB_NAME, HEADERS, CRAWLER_COLLECTION, PARSE_COLLECTION
 
 
-
 class Parser:
     def __init__(self):
         connect(DB_NAME, host=MONGO_URI, alias="default")
@@ -19,23 +18,21 @@ class Parser:
     def start(self):
         links = self.crawler_collection.find()
         
-        # urls =  [
-        #     "https://www.autozone.com/internal-engine/timing-set/p/sa-gear-timing-set-3dr-98/155774_0_0"
-        #     "https://www.autozone.com/batteries-starting-and-charging/alternator/p/duralast-new-alternator-11390n/1484487_0_0",
-        #     "https://www.autozone.com/batteries-starting-and-charging/battery/p/duralast-gold-group-size-47-h5-battery-h5-dlg/832330_0_0",
-        #     "https://www.autozone.com/motor-oil-and-transmission-fluid/engine-oil/p/valvoline-restore-protect-full-synthetic-engine-oil-0w-20-5-quart/1345769_0_0",
-        # ]
-         
+
         for link in links:
             pdp_url = link.get("url","")
-        
-            response = requests.get(pdp_url, headers=HEADERS)
+            
+            session = requests.Session()
+            response = session.get(pdp_url, headers=HEADERS)
             
             if response.status_code == 200:
                 self.parse_item(pdp_url,response)
+                
             else:
                 logging.error(f"Status code : {response.status_code}")
-                # FailedItem(url=pdp_url, source = "parser").save()
+                if response.status_code == 403:
+                    break
+                FailedItem(url=pdp_url, source = "parser").save()
             
     
     def parse_item(self, link, response):
@@ -63,12 +60,9 @@ class Parser:
         
         json_data = sel.xpath(LD_JSON_XPATH).get()
         data = json.loads(json_data)
-        with open("demo1.json", "w", encoding="utf-8") as file:
-           json.dump(data, file, indent=4, ensure_ascii=False)
 
 
         instock = data.get("offers", {}).get("availability", "")
-        
                                 
                 
         price = "".join(price).replace("$", "").strip() if price else 0
@@ -100,10 +94,10 @@ class Parser:
         item["specification"] = specification
         
         logging.info(item)
-        # try:
-        #     ProductItem(**item).save()
-        # except:
-        #     pass
+        try:
+            ProductItem(**item).save()
+        except:
+            pass
         
         
     

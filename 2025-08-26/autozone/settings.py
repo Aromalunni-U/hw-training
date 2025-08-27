@@ -23,6 +23,14 @@ HEADERS = {
     'Priority': 'u=0, i',
 }
 
+cookies = {
+        'JSESSIONID': 'hY7qA1KsKJbQKQXjPOBiybfLRU5LNDC3nY0ri2MdggegW39WKdKY!18651468',
+        'WWW-WS-ROUTE': 'ffffffff09c20e0b45525d5f4f58455e445a4a4216cf',
+        '_pxvid': '1148e41a-8239-11f0-ac1b-4d3d4bfcc486',
+        '_px2': 'eyJ1IjoiMGM5ZDRiZTEtODMwYy0xMWYwLWFkNGMtMGJhMjgyZjA2ZjAzIiwidiI6IjExNDhlNDFhLTgyMzktMTFmMC1hYzFiLTRkM2Q0YmZjYzQ4NiIsInQiOjE3NTYyNzUzMjUwOTcsImgiOiI1NjEyMDA3ZGFlN2M5NzZlNmJiMWI2YmEyYjgyYjQzMzA2NzU5ZmMxNDBmMjMxZmJiYmFhNmYyYjBhZmViZWRiIn0=',
+        '_pxdc': 'Bot',
+        'botStatus': 'Not a Bot'
+}
 
 
 PROJECT_NAME = "autozone"
@@ -33,7 +41,7 @@ INTEREXCHANGE_DATA = "interexchange_number_data"
 PARSE_COLLECTION = "parser"
 CRAWLER_COLLECTION = "crawler"
 MONGO_COLLECTION_URL_FAILED = f"{PROJECT_NAME}_url_failed"
-MONGO_COLLECTION_CATEGORY = f"{PROJECT_NAME}_category_url"
+NO_MATCHED_COLLECTION = "no_matched_parts"
 
 file_name = "2025-08-26/autozone/autozone.csv"
 
