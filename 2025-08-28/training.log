@@ -1,0 +1,12 @@
+WEBSITE URL : https://www.instagram.com/
+
+
+
+- Scraped data from instagram using Apify.
+
+site : Instagram
+brand : tesco, Morrisons, Sainsburys
+
+
+fields :
+Brand	brand_type	Platform	Post ID/URL	Post Date/Time	User Handle	User Type	Post Text/Caption	Post Type	Media Type	Mentions Type	Hashtags Used	Engagement - Likes	Engagement - Comments	Engagement - Shares/Retweets	Views (Video)	Common Keywords	Region	Language	Top Theme Tags	Campaign Tag	Image/Video URL
