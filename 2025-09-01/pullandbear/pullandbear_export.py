@@ -28,6 +28,7 @@ class Export:
                 product_description.replace("<br/>", "") 
                 if product_description else ""
             )
+            color = color if color and color != [""] else ""
             
             
             data = [  

@@ -1,8 +1,9 @@
 import requests
-from mongoengine import connect
 import logging
+from mongoengine import connect
 from pymongo import MongoClient
 from pullandbear_items import ProductItem
+from mongoengine.errors import NotUniqueError
 from settings import (
     MONGO_URI, DB_NAME, HEADERS,
     CRAWLER_COLLECTION, PARSE_COLLECTION, MONGO_COLLECTION_CATEGORY
@@ -18,9 +19,18 @@ class Parser:
         self.parser_collection = db[PARSE_COLLECTION]
         self.category_collection = db[MONGO_COLLECTION_CATEGORY]
         
+        self.product_logger = logging.getLogger("product_logger")
+        self.product_logger.setLevel(logging.INFO)
+        file_handler = logging.FileHandler("product_data.log")
+        formatter = logging.Formatter(
+        "%(asctime)s - CATEGORY: %(category_id)s - PRODUCT_ID: %(product_id)s - URL: %(url)s - STATUS: %(status)s"
+        )
+        file_handler.setFormatter(formatter)
+        self.product_logger.addHandler(file_handler)
+        
         
     def start(self):
-        category_ids = self.crawler_collection.find({}, {"category_id": 1, "_id": 0})
+        category_ids = self.category_collection.find({}, {"category_id": 1, "_id": 0})
         
         for category_doc in category_ids:
             category_id = category_doc.get("category_id", "")
@@ -29,7 +39,7 @@ class Parser:
                 {"category_id":category_id}, {"product_id": 1, "_id": 0}
             )
             
-            product_ids = [doc.get("product_id", "") for doc in product_docs]
+            product_ids = list({doc.get("product_id", "") for doc in product_docs})
 
             batch_size = 12
 
@@ -50,14 +60,14 @@ class Parser:
                 )
                 
                 if response.status_code == 200:
-                    self.parse_item(response)
+                    self.parse_item(response, category_id)
                         
                 else:
                     logging.error(f"Status code : {response.status_code}")
                 
                 
 
-    def parse_item(self, response):
+    def parse_item(self, response, category_id):
         
         data = response.json()
 
@@ -96,10 +106,36 @@ class Parser:
             
             
             logging.info(item)
+            
+            self.product_logger.info(
+                "",
+                extra={
+                    "category_id": category_id,
+                    "product_id": product_id,
+                    "url": pdp_url,
+                    "status": "NEW"
+                }
+            )
+
+
             try:
                 ProductItem(**item).save()
+            except NotUniqueError:
+                self.product_logger.info(
+                "",
+                extra={
+                    "category_id": category_id,
+                    "product_id": product_id,
+                    "url": pdp_url,
+                    "status": "DUPLICATE"
+                }
+            )
+
+                logging.warning(f"Duplicate product : {item['product_id']}\nURL : {pdp_url}")
+                
             except:
                 pass
+
 
 
 
