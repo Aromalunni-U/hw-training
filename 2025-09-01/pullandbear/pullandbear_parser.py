@@ -19,15 +19,6 @@ class Parser:
         self.parser_collection = db[PARSE_COLLECTION]
         self.category_collection = db[MONGO_COLLECTION_CATEGORY]
         
-        self.product_logger = logging.getLogger("product_logger")
-        self.product_logger.setLevel(logging.INFO)
-        file_handler = logging.FileHandler("product_data.log")
-        formatter = logging.Formatter(
-        "%(asctime)s - CATEGORY: %(category_id)s - PRODUCT_ID: %(product_id)s - URL: %(url)s - STATUS: %(status)s"
-        )
-        file_handler.setFormatter(formatter)
-        self.product_logger.addHandler(file_handler)
-        
         
     def start(self):
         category_ids = self.category_collection.find({}, {"category_id": 1, "_id": 0})
@@ -107,30 +98,11 @@ class Parser:
             
             logging.info(item)
             
-            self.product_logger.info(
-                "",
-                extra={
-                    "category_id": category_id,
-                    "product_id": product_id,
-                    "url": pdp_url,
-                    "status": "NEW"
-                }
-            )
 
 
             try:
                 ProductItem(**item).save()
             except NotUniqueError:
-                self.product_logger.info(
-                "",
-                extra={
-                    "category_id": category_id,
-                    "product_id": product_id,
-                    "url": pdp_url,
-                    "status": "DUPLICATE"
-                }
-            )
-
                 logging.warning(f"Duplicate product : {item['product_id']}\nURL : {pdp_url}")
                 
             except:
