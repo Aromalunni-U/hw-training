@@ -1,0 +1,22 @@
+WEBSITE URL : https://www.spar.at
+WEBSITE URL : https://www.exprealty.com/
+WEBSITE URL : https://www.mrosupply.com/
+
+
+- Completed spar feasibility study and also completed sdcraping 100 sample data from it.
+- Meeting was conducted.
+- Completed Exprealty QA.
+- Exported Mro supply into CSV format.
+
+
+Fields :
+    product_name
+    breadcrumb
+    selling_price
+    product_description
+    image
+    article_number
+    regular_price
+    product_id
+    pdp_url
+
