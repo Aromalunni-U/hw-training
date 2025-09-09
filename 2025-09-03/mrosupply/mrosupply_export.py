@@ -3,6 +3,8 @@ import csv
 import re
 from settings import file_name,FILE_HEADERS, MONGO_URI, DB_NAME, PARSE_COLLECTION
 from pymongo import MongoClient
+from datetime import datetime
+
 
 client = MongoClient(MONGO_URI)  
 db = client[DB_NAME] 
@@ -26,6 +28,14 @@ class Export:
             model_number = item.get("model_number", "")
             product_category = item.get("product_category", "")
             date_crawled = item.get("date_crawled", "")
+            
+            price = f"{price:.2f}" if price != 0 else ""
+            product_description = (
+                re.sub(r"\s+", " ", product_description.replace("\xa0", " ")).strip()
+                if product_description else ""
+            )
+            date_crawled = date_crawled.strftime("%Y-%m-%d")
+
             
             company_name = "mrosupply"
             manufacturer_name = ""

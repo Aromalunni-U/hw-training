@@ -1,5 +1,7 @@
-import json
+import re
+import time
 import requests
+import random
 from mongoengine import connect
 import logging
 from parsel import Selector
@@ -24,11 +26,25 @@ class Parser:
             link = link.get("url","")
             
             response = requests.get(link,headers=HEADERS)
+            
             if response.status_code == 200:
                 self.parse_item(response, link)
+                
+            elif response.status_code == 429:
+                logging.warning("Got 429....")
+                time.sleep(5)
+                
+                response = requests.get(link, headers=HEADERS)
+                if response.status_code == 200:
+                    self.parse_item(response, link)
+                    time.sleep(random.uniform(1, 3))
+                    
+                else:
+                    logging.warning(f"Status code : {response.status_code}")
+                    FailedItem(url=link, source="parser").save()
             else:
                 logging.warning(f"Status code : {response.status_code}")
-                FailedItem(url=link, sourcce = "parser").save()
+                FailedItem(url=link, source = "parser").save()
             
             
     def parse_item(self, response, link):
@@ -38,7 +54,7 @@ class Parser:
         BRAND_NAME_XPATH = '//a[@class="js-brand-name"]/text()'
         VENDOR_SELLER_PART_NUMBER_XPATH = '//div[p[contains(text(), "SKU")]]/following-sibling::div/p/text()' 
         ITEM_NAME_XPATH = '//h1/text()'
-        FULL_PRODUCT_DESCRIPTION_XPATH = '//div[@class="m-accordion--item--body"]//text()'
+        FULL_PRODUCT_DESCRIPTION_XPATH = '//div[@id="additionalDescription"]/div[@class="m-accordion--item--body"]//text()'
         PRICE_XPATH = '//p[contains(@class,"price")]/text()'
         UPC_XPATH = '//div[p[contains(text(), "UPC")]]/following-sibling::div/p/text()'        
         MODEL_NUMBER_XPATH = '//p[@class="modelNo"]/text()'
@@ -61,11 +77,17 @@ class Parser:
             if vendor_seller_part_number else ""
         )
         item_name = item_name.strip() if item_name else ""
-        price = price.strip() if price else "0"
+        price = (
+            re.sub(r"[^\d.]", "", price)
+            if price else 0
+        )
         upc = upc.strip() if upc else ""
         model_number = model_number.strip() if model_number else ""
         product_category = product_category.strip() if product_category else ""
-        
+        product_description = (
+            " ".join([desc.strip() for desc in product_description])
+            if product_description else ""
+        )
         
         item = {}
                 
@@ -84,8 +106,8 @@ class Parser:
         
         try:
             ProductItem(**item).save()
-        except:
-            pass
+        except Exception as e:
+            logging.error(e)
 
 
 
