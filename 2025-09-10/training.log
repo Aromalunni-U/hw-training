@@ -1,0 +1,35 @@
+WEBSITE URL : https://www.auchan.fr/
+
+
+
+- Completed Auchan feasibility.
+
+FIELDS :
+    Scrape Date
+    Country
+    Retail Chain
+    Brand
+    Product Name
+    Pack Size
+    Price per Pack
+    Price per Kg or L
+    Promotion (Yes/No)
+    Promotion Description
+    Product Description
+    Ingredients
+    Legal Name
+    Category Path
+    Product Image URL
+    Product Code (EAN/GTIN)
+    Unit Count or Quantity
+    Private Label (Yes/No)
+    Promotion Start Date
+    Promotion End Date
+    Promotion Type
+    Store or Region
+    Allergen & Dietary Claims
+    Nutritional Values
+    Manufacturer or Distributor
+    Additional Claims or Labels
+
+
